@@ -1,5 +1,5 @@
 [package]
-name = "rustpiIO"
+name = "rustpi_io"
 version = "0.1.0"
 authors = ["tom <tm219@uni-rostock.de>"]
 
