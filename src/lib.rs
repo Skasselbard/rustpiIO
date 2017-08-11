@@ -1,6 +1,5 @@
-#[cfg(test)]
-mod tests {
-    #[test]
-    fn it_works() {
-    }
+static GPIO_PATH: &'static str = "/sys/class/gpio/";
+
+fn init() {
+    println!("{:?}", GPIO_PATH);
 }
