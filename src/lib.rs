@@ -1,5 +1,5 @@
 
-mod rustpi_io{
+pub mod rustpi_io{
     use std::fs::OpenOptions;
     use std::io::prelude::*;
     use std::error::Error;
