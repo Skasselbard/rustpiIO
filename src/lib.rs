@@ -69,7 +69,7 @@ pub mod rustpi_io{
                     Ok(_) => println!("gpio {} initialized", gpio),
                 }
            }
-           self.set_mode(mode)
+           Ok(GPIO{pin: gpio, mode: mode})
         }
     }
 
