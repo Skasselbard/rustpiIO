@@ -90,12 +90,12 @@ pub mod rustpi_io{
 
     impl Read for GPIO {
         fn read(&mut self, buf: &mut [u8]) -> Result<usize>{
-            let value = match OpenOptions::new().read(true).open(format!("{}gpio{}/value", GPIO_PATH, self.pin)) {
+            let mut value = match OpenOptions::new().read(true).open(format!("{}gpio{}/value", GPIO_PATH, self.pin)) {
                 Ok(f) => f,
                 Err(e) => panic!("file error: {}", e),
             };
             let mut buffer = vec![];
-            match value.take(1).read_to_end(&mut buffer ){
+            match value.read_to_end(&mut buffer ){
                 Ok(n) => {
                     buf[0] = buffer[0];
                     Ok(n)
