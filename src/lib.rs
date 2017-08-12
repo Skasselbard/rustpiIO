@@ -53,7 +53,7 @@ pub mod rustpi_io{
             Ok(Self { pin: self.pin, mode: mode})
         }
 
-        pub fn init(self, gpio: u8, mode: GPIOMode) -> Result<Self> {
+        pub fn init(gpio: u8, mode: GPIOMode) -> Result<Self> {
             println!("path = {:?}", GPIO_PATH);
             println!("gpio number = {:?}", gpio);
             println!("mode = {:?}", mode);
