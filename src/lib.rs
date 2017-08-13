@@ -3,6 +3,8 @@ pub mod rustpi_io{
     use std::fs::OpenOptions;
     use std::io::prelude::*;
     use std::io::Result;
+    use std::io::ErrorKind;
+    use std::io::Error;
 
     static GPIO_PATH: &'static str = "/sys/class/gpio/";
 
@@ -18,7 +20,7 @@ pub mod rustpi_io{
     }
 
     impl GPIO{
-        pub fn gpio(&self) -> u8 { self.pin }
+        pub fn gpio_number(&self) -> u8 { self.pin }
 
         pub fn current_mode(&self) -> GPIOMode {
             self.mode
@@ -69,6 +71,20 @@ pub mod rustpi_io{
             try!(value.read_to_end(&mut buffer ));
             buf[0] = buffer[0];
             Ok(buffer.len())
+        }
+    }
+
+    impl Write for GPIO {
+        fn write(&mut self, buf: &[u8]) -> Result<usize>{
+            if buf[0] > 1{
+                return Err(Error::new(ErrorKind::InvalidData, "trying to write value greater then one, but GPIOs can only be High (one) or Low (0)"))
+            }
+            let mut direction = OpenOptions::new().write(true).open(format!("{}gpio{}/direction", GPIO_PATH, self.pin))?;
+            try!(direction.write_all(buf));
+            Ok(5)
+        }
+        fn flush(&mut self) -> Result<()>{
+            Ok(())
         }
     }
 }
