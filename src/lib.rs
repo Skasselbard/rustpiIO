@@ -70,7 +70,7 @@ pub mod rustpi_io{
                 GPIOData::Low => "0",
                 GPIOData::High => "1"
             };
-            let mut direction = OpenOptions::new().write(true).open(format!("{}gpio{}/direction", GPIO_PATH, self.pin))?;
+            let mut direction = OpenOptions::new().write(true).open(format!("{}gpio{}/value", GPIO_PATH, self.pin))?;
             try!(direction.write_all(buffer.as_bytes()));
             Ok(())
         }
