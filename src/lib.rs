@@ -5,10 +5,12 @@ pub mod rustpi_io{
     use std::io::Result;
     use std::io::ErrorKind;
     use std::io::Error;
+    use std::path::Path;
+    use std::fmt;
 
     static GPIO_PATH: &'static str = "/sys/class/gpio/";
 
-    #[derive(Debug, Clone, Copy)]
+    #[derive(Debug, Clone, Copy, PartialEq)]
     pub enum GPIOMode{
         Read,
         Write
@@ -35,19 +37,22 @@ pub mod rustpi_io{
         pub fn set_mode(&mut self, mode: GPIOMode) -> Result<&mut Self>{
             let mut direction = OpenOptions::new().write(true).open(format!("{}gpio{}/direction", GPIO_PATH, self.pin))?;
             match mode{
-                GPIOMode::Read   => try!(direction.write_all("in".as_bytes())),
-                GPIOMode::Write   => try!(direction.write_all("out".as_bytes())),
+                GPIOMode::Read  => try!(direction.write_all("in".as_bytes())),
+                GPIOMode::Write => try!(direction.write_all("out".as_bytes())),
             };
             self.mode = mode;
             Ok(self)
         }
 
         pub fn init(gpio: u8, mode: GPIOMode) -> Result<Self> {
-            println!("gpio number = {:?}", gpio);
-            println!("mode = {:?}", mode);
+            println!("gpio number = {}", gpio);
+            println!("mode = {}", mode);
+            if Path::new(&format!("{}gpio{}/", GPIO_PATH, gpio)).exists(){
+                return Err(Error::new(ErrorKind::AddrInUse, "Error: gpio was already initialized"))
+            }
             {
-                let mut export_file = OpenOptions::new().write(true).open(format!("{}export", GPIO_PATH))?;
-                export_file.write_all(format!("{}", gpio).as_bytes())?;
+                let mut export = OpenOptions::new().write(true).open(format!("{}export", GPIO_PATH))?;
+                export.write_all(format!("{}", gpio).as_bytes())?;
             }
             let mut result = GPIO{pin: gpio, mode: mode};
             result.set_mode(mode)?;
@@ -66,6 +71,9 @@ pub mod rustpi_io{
         }
 
         pub fn set(&self, data: GPIOData) -> Result<()>{
+            if self.mode != GPIOMode::Write {
+                return Err(Error::new(ErrorKind::PermissionDenied, "Error: gpio is not in write mode"))
+            }
             let buffer = match data{
                 GPIOData::Low => "0",
                 GPIOData::High => "1"
@@ -78,7 +86,8 @@ pub mod rustpi_io{
 
     impl Drop for GPIO{
         fn drop(&mut self){
-            let mut unexport = match OpenOptions::new().write(true).open(format!("{}unexport", GPIO_PATH)) {
+            let mut unexport =
+            match OpenOptions::new().write(true).open(format!("{}unexport", GPIO_PATH)) {
                 Ok(f) => f,
                 Err(e) => panic!("file error: {}", e),
             };
@@ -91,27 +100,21 @@ pub mod rustpi_io{
         }
     }
 
-    // impl Read for GPIO {
-    //     fn read(&mut self, buf: &mut [u8]) -> Result<usize>{
-    //         let mut value = try!(OpenOptions::new().read(true).open(format!("{}gpio{}/value", GPIO_PATH, self.pin)));
-    //         let mut buffer = vec![];
-    //         try!(value.read_to_end(&mut buffer ));
-    //         buf[0] = buffer[0];
-    //         Ok(buffer.len())
-    //     }
-    // }
+    impl fmt::Display for GPIOData {
+        fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+            match *self {
+                GPIOData::Low => write!(f, "LOW"),
+                GPIOData::High => write!(f, "HIGH")
+            }
+        }
+    }
 
-    // impl Write for GPIO {
-    //     fn write(&mut self, buf: &[u8]) -> Result<usize>{
-    //         if buf[0] > 1{
-    //             return Err(Error::new(ErrorKind::InvalidData, "trying to write value greater then one, but GPIOs can only be High (one) or Low (0)"))
-    //         }
-    //         let mut direction = OpenOptions::new().write(true).open(format!("{}gpio{}/direction", GPIO_PATH, self.pin))?;
-    //         try!(direction.write_all(buf));
-    //         Ok(5)
-    //     }
-    //     fn flush(&mut self) -> Result<()>{
-    //         Ok(())
-    //     }
-    // }
+    impl fmt::Display for GPIOMode {
+        fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+            match *self {
+                GPIOMode::Read => write!(f, "Read"),
+                GPIOMode::Write => write!(f, "Write")
+            }
+        }
+    }
 }
