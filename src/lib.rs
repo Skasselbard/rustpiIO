@@ -14,6 +14,12 @@ pub mod rustpi_io{
         Write
     }
 
+    #[derive(Debug, Clone, Copy)]
+    pub enum GPIOData{
+        Low = 0,
+        High = 1
+    }
+
     pub struct GPIO {
         pin: u8,
         mode: GPIOMode
@@ -47,6 +53,27 @@ pub mod rustpi_io{
             result.set_mode(mode)?;
             Ok(result)
         }
+
+        pub fn value(&self) -> Result<GPIOData>{
+            let mut value = try!(OpenOptions::new().read(true).open(format!("{}gpio{}/value", GPIO_PATH, self.pin)));
+            let mut buffer = vec![];
+            try!(value.read_to_end(&mut buffer ));
+            match buffer[0] as char{
+                '0' => Ok(GPIOData::Low),
+                '1' => Ok(GPIOData::High),
+                _ => Err(Error::new(ErrorKind::InvalidData, "read value other than 1 or 0"))
+            }
+        }
+
+        pub fn set(&self, data: GPIOData) -> Result<()>{
+            let buffer = match data{
+                GPIOData::Low => [0],
+                GPIOData::High => [1]
+            };
+            let mut direction = OpenOptions::new().write(true).open(format!("{}gpio{}/direction", GPIO_PATH, self.pin))?;
+            try!(direction.write_all(&buffer));
+            Ok(())
+        }
     }
 
     impl Drop for GPIO{
@@ -64,27 +91,27 @@ pub mod rustpi_io{
         }
     }
 
-    impl Read for GPIO {
-        fn read(&mut self, buf: &mut [u8]) -> Result<usize>{
-            let mut value = try!(OpenOptions::new().read(true).open(format!("{}gpio{}/value", GPIO_PATH, self.pin)));
-            let mut buffer = vec![];
-            try!(value.read_to_end(&mut buffer ));
-            buf[0] = buffer[0];
-            Ok(buffer.len())
-        }
-    }
+    // impl Read for GPIO {
+    //     fn read(&mut self, buf: &mut [u8]) -> Result<usize>{
+    //         let mut value = try!(OpenOptions::new().read(true).open(format!("{}gpio{}/value", GPIO_PATH, self.pin)));
+    //         let mut buffer = vec![];
+    //         try!(value.read_to_end(&mut buffer ));
+    //         buf[0] = buffer[0];
+    //         Ok(buffer.len())
+    //     }
+    // }
 
-    impl Write for GPIO {
-        fn write(&mut self, buf: &[u8]) -> Result<usize>{
-            if buf[0] > 1{
-                return Err(Error::new(ErrorKind::InvalidData, "trying to write value greater then one, but GPIOs can only be High (one) or Low (0)"))
-            }
-            let mut direction = OpenOptions::new().write(true).open(format!("{}gpio{}/direction", GPIO_PATH, self.pin))?;
-            try!(direction.write_all(buf));
-            Ok(5)
-        }
-        fn flush(&mut self) -> Result<()>{
-            Ok(())
-        }
-    }
+    // impl Write for GPIO {
+    //     fn write(&mut self, buf: &[u8]) -> Result<usize>{
+    //         if buf[0] > 1{
+    //             return Err(Error::new(ErrorKind::InvalidData, "trying to write value greater then one, but GPIOs can only be High (one) or Low (0)"))
+    //         }
+    //         let mut direction = OpenOptions::new().write(true).open(format!("{}gpio{}/direction", GPIO_PATH, self.pin))?;
+    //         try!(direction.write_all(buf));
+    //         Ok(5)
+    //     }
+    //     fn flush(&mut self) -> Result<()>{
+    //         Ok(())
+    //     }
+    // }
 }
