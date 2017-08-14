@@ -26,13 +26,15 @@ pub struct GPIO {
 }
 
 impl GPIO{
+    /// Returns the configured pin of the GPIO struct.
     pub fn gpio_number(&self) -> u8 { self.pin }
 
+    /// Returns the configured mode of the GPIO struct.
     pub fn current_mode(&self) -> GPIOMode {
         self.mode
     }
 
-    // Changes the mode of the pin and writes the acording value to the fitting direction file
+    /// Changes the mode of the pin and writes the acording value to the fitting direction file
     pub fn set_mode(&mut self, mode: GPIOMode) -> Result<&mut Self>{
         let mut direction = OpenOptions::new().write(true).open(format!("{}gpio{}/direction", GPIO_PATH, self.pin))?;
         match mode{
