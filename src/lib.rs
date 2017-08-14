@@ -66,7 +66,7 @@ pub mod rustpi_io{
         }
 
         pub fn set(&self, data: GPIOData) -> Result<()>{
-            let buffer = match data{
+            let buffer: [u8; 2] = match data{
                 GPIOData::Low => [0,0],
                 GPIOData::High => [1,0]
             };
