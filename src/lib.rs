@@ -67,8 +67,8 @@ pub mod rustpi_io{
 
         pub fn set(&self, data: GPIOData) -> Result<()>{
             let buffer = match data{
-                GPIOData::Low => [0],
-                GPIOData::High => [1]
+                GPIOData::Low => [0,0],
+                GPIOData::High => [1,0]
             };
             let mut direction = OpenOptions::new().write(true).open(format!("{}gpio{}/direction", GPIO_PATH, self.pin))?;
             try!(direction.write_all(&buffer));
