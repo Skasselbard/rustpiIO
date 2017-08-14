@@ -45,8 +45,6 @@ pub mod rustpi_io{
         }
 
         pub fn init(gpio: u8, mode: GPIOMode) -> Result<Self> {
-            println!("gpio number = {}", gpio);
-            println!("mode = {}", mode);
             if Path::new(&format!("{}gpio{}/", GPIO_PATH, gpio)).exists(){
                 return Err(Error::new(ErrorKind::AddrInUse, "Error: gpio was already initialized"))
             }
@@ -95,7 +93,7 @@ pub mod rustpi_io{
                 Err(why) => {
                    panic!("couldn't close gpio {}: {}",self.pin , why)
                 },
-                Ok(_) => println!("gpio {} closed", self.pin),
+                Ok(_) => {},
             }
         }
     }
