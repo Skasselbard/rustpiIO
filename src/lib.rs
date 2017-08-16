@@ -1,3 +1,5 @@
+//!DocuShmocu
+
 use std::fs::OpenOptions;
 use std::io::prelude::*;
 use std::io::Result;
@@ -6,7 +8,10 @@ use std::io::Error;
 use std::path::Path;
 use std::fmt;
 
-static GPIO_PATH: &'static str = "/sys/class/gpio/";
+pub mod pi;
+
+
+const GPIO_PATH: &str = "/sys/class/gpio/";
 
 #[derive(Debug, Clone, Copy, PartialEq)]
 pub enum GPIOMode{
