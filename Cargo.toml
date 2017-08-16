@@ -3,5 +3,6 @@ name = "rustpi_io"
 version = "0.1.0"
 authors = ["Tom Meyer<tom.meyer89@gmail.com"]
 include = ["src/*"]
+license = "GNU General Public License v3"
 
 [dependencies]
