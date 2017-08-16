@@ -18,7 +18,8 @@
 // along with RustpiIO.  If not, see <http://www.gnu.org/licenses/>
 
 //!
-//! Based on [https://www.raspberrypi.org/documentation/hardware/raspberrypi/revision-codes/README.md]
+//! Based on https://www.raspberrypi.org/documentation/hardware/raspberrypi/revision-codes/README.md
+//!
 
 use std::fmt;
 use std::io::Result;
@@ -191,6 +192,9 @@ use std::io::Error;
         }
     }
 
+    /// A function to extract information about the pi's hardware.
+    /// The /proc/cpuinfo file is converted to progamatically usable data.
+    /// The last element of the tuple is the revision of the raspberry model.
     pub fn get_rustberry_info() -> Result<(MemorySize, Manufacturer, Processor, Type, u32)>{
         //open file and read data
         let mut file = File::open("/proc/cpuinfo").unwrap();
