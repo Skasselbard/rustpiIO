@@ -4,5 +4,7 @@ version = "0.1.0"
 authors = ["Tom Meyer<tom.meyer89@gmail.com"]
 include = ["src/*"]
 license = "GNU General Public License v3"
-keywords = ["raspberry", "pi", "gpio"]
+keywords = ["raspberry", "pi", "gpio", "serial", "connection", "spi", "serial peripheral interface bus"]
+
 [dependencies]
+spidev = "0.3.0"
