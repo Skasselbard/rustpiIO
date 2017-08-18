@@ -1,6 +1,7 @@
 use std::io;
 use std::io::prelude::*;
-use spidev::{SPI_MODE_0, Spidev, SpidevOptions, SpidevTransfer};
+use std::io::{Error, ErrorKind};
+use spidev::{SPI_MODE_0, SPI_MODE_1, SPI_MODE_2, SPI_MODE_3, Spidev, SpidevOptions, SpidevTransfer};
 use globals::{SPI_PATH0, SPI_PATH1};
 
 //TODO: write to stdout
@@ -73,15 +74,42 @@ impl Speed{
     }
 }
 
-pub fn create_spi(device: Device, speed: Speed) -> io::Result<Spidev> {
+/**
+The most common spi modes. regulating the clock edge and polariy
+see https://en.wikipedia.org/wiki/Serial_Peripheral_Interface_Bus#Clock_polarity_and_phase f. for an explanation 
+*/
+pub enum SpiMode{
+    Mode0,
+    Mode1,
+    Mode2,
+    Mode3
+}
+
+fn spi_open_error() -> Error{
+    Error::new(ErrorKind::NotFound, 
+    "Error: Unable to open the spi device. Did you set \"dtparam=spi=on\" in /boot/config.txt?")
+}
+
+pub fn create_spi(device: Device, speed: Speed, mode: SpiMode) -> io::Result<Spidev> {
     let mut spi = match device {
-        Device::CE0 => try!(Spidev::open(SPI_PATH0)),
-        Device::CE1 => try!(Spidev::open(SPI_PATH1)),
+        Device::CE0 => match Spidev::open(SPI_PATH0){
+            Err(_) => return Err(spi_open_error()),
+            Ok(device) => device,
+        },
+        Device::CE1 => match Spidev::open(SPI_PATH1){
+            Err(_) => return Err(spi_open_error()),
+            Ok(device) => device,
+        },
     };
     let options = SpidevOptions::new()
         .bits_per_word(8)
         .max_speed_hz(speed.to_int())
-        .mode(SPI_MODE_0)
+        .mode(match mode{
+            SpiMode::Mode0 => SPI_MODE_0,
+            SpiMode::Mode1 => SPI_MODE_1,
+            SpiMode::Mode2 => SPI_MODE_2,
+            SpiMode::Mode3 => SPI_MODE_3,
+        })
         .build();
     try!(spi.configure(&options));
     Ok(spi)
