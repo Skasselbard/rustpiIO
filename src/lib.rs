@@ -73,6 +73,7 @@
 
 extern crate spidev;
 
+mod globals;
 pub mod gpio;
 pub mod pi;
 pub mod serial;
