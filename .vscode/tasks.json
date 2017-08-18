@@ -16,6 +16,15 @@
             }
         },
         {
+            "taskName": "Docu",
+            "type": "shell",
+            "command": "cargo doc",
+            "problemMatcher": [
+                "$go"
+            ],
+            "group": "build"
+        },
+        {
             "taskName": "Deploy",
             "type": "shell",
             "command": "sh crossBuild.sh",
@@ -28,7 +37,7 @@
                 "reveal": "always",
                 "focus": true,
                 "panel": "shared"
-            }            
+            }
         }
     ]
 }
