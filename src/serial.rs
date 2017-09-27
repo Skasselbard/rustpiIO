@@ -1,8 +1,10 @@
 use std::io;
-use std::io::prelude::*;
 use std::io::{Error, ErrorKind};
 use spidev::{SPI_MODE_0, SPI_MODE_1, SPI_MODE_2, SPI_MODE_3, Spidev, SpidevOptions, SpidevTransfer};
 use globals::{SPI_PATH0, SPI_PATH1};
+use std::io::Read;
+//use std::collections;
+use std::{thread, time};
 
 //TODO: write to stdout
 
@@ -30,6 +32,7 @@ pub enum Device {
     15.2 kHz  
     7629 Hz  
  */
+ #[derive(Debug)]
  #[allow(non_camel_case_types)]
 pub enum Speed {
     Mhz125_0,
@@ -52,31 +55,31 @@ pub enum Speed {
 
 impl Speed{
     /// Converts the `Speed` variants into an integer representing the Hz value
-    #[allow(non_snake_case, unused)]
     fn to_int(&self) -> u32{
-        match self{
-            Mhz125_0 => 125_000_001,
-            Mhz62_5 => 62_500_001,
-            Mhz31_2 => 31_200_001,
-            Mhz15_6 => 15_600_001,
-            Mhz7_8 => 7_800_001,
-            Mhz3_9 => 3_900_001,
-            Khz1953 => 1_935_001,
-            Khz976 => 976_001,
-            Khz488 => 488_001,
-            Khz244 => 244_001,
-            Khz122 => 122_001,
-            Khz61 => 61_001,
-            Khz30_5 => 30_501,
-            Khz15_2 => 15_201,
-            Hz7629 => 7_630,
+        match *self{
+            Speed::Mhz125_0 => 125_000_001,
+            Speed::Mhz62_5 => 62_500_001,
+            Speed::Mhz31_2 => 31_200_001,
+            Speed::Mhz15_6 => 15_600_001,
+            Speed::Mhz7_8 => 7_800_001,
+            Speed::Mhz3_9 => 3_900_001,
+            Speed::Khz1953 => 1_935_001,
+            Speed::Khz976 => 976_001,
+            Speed::Khz488 => 488_001,
+            Speed::Khz244 => 244_001,
+            Speed::Khz122 => 122_001,
+            Speed::Khz61 => 61_001,
+            Speed::Khz30_5 => 30_501,
+            Speed::Khz15_2 => 15_201,
+            Speed::Hz7629 => 7_630,
         }
     }
 }
 
 /**
-The most common spi modes. regulating the clock edge and polariy
-see https://en.wikipedia.org/wiki/Serial_Peripheral_Interface_Bus#Clock_polarity_and_phase f. for an explanation 
+The most common spi modes. regulating the clock edge and polariy.  
+Mode 0 seems to be the most used one.  
+See https://en.wikipedia.org/wiki/Serial_Peripheral_Interface_Bus#Clock_polarity_and_phase f. for an explanation 
 */
 pub enum SpiMode{
     Mode0,
@@ -86,45 +89,75 @@ pub enum SpiMode{
 }
 
 fn spi_open_error() -> Error{
-    Error::new(ErrorKind::NotFound, 
-    "Error: Unable to open the spi device. Did you set \"dtparam=spi=on\" in /boot/config.txt?")
+    Error::new(
+        ErrorKind::NotFound, 
+        "Error: Unable to open the spi device. Did you set \"dtparam=spi=on\" in /boot/config.txt?"
+        )
 }
 
-pub fn create_spi(device: Device, speed: Speed, mode: SpiMode) -> io::Result<Spidev> {
-    let mut spi = match device {
-        Device::CE0 => match Spidev::open(SPI_PATH0){
-            Err(_) => return Err(spi_open_error()),
-            Ok(device) => device,
-        },
-        Device::CE1 => match Spidev::open(SPI_PATH1){
-            Err(_) => return Err(spi_open_error()),
-            Ok(device) => device,
-        },
-    };
-    let options = SpidevOptions::new()
-        .bits_per_word(8)
-        .max_speed_hz(speed.to_int())
-        .mode(match mode{
-            SpiMode::Mode0 => SPI_MODE_0,
-            SpiMode::Mode1 => SPI_MODE_1,
-            SpiMode::Mode2 => SPI_MODE_2,
-            SpiMode::Mode3 => SPI_MODE_3,
-        })
-        .build();
-    try!(spi.configure(&options));
-    Ok(spi)
+pub struct SerialPi{
+    pub device: Spidev, //TODO make private again
 }
 
-/// Perform full duplex operations using Ioctl
-pub fn full_duplex(spi: &Spidev) -> io::Result<()> {
-    // "write" transfers are also reads at the same time with
-    // the read having the same length as the write
-    let tx_buf = [0x01, 0x05, 0x03];
-    let mut rx_buf = [0; 3];
-    {
-        let mut transfer = SpidevTransfer::read_write(&tx_buf, &mut rx_buf);
-        try!(spi.transfer(&mut transfer));
+impl SerialPi{
+    pub fn new(device: Device, speed: Speed, mode: SpiMode) -> io::Result<SerialPi> {
+        //TODO: Check that correponding GPIOS are free
+        let mut spi = match device {
+            Device::CE0 => match Spidev::open(SPI_PATH0){
+                Err(_) => return Err(spi_open_error()),
+                Ok(device) => device,
+            },
+            Device::CE1 => match Spidev::open(SPI_PATH1){
+                Err(_) => return Err(spi_open_error()),
+                Ok(device) => device,
+            },
+        };
+        let options = SpidevOptions::new()
+            .bits_per_word(8)
+            .max_speed_hz(speed.to_int())
+            .mode(match mode{
+                SpiMode::Mode0 => SPI_MODE_0,
+                SpiMode::Mode1 => SPI_MODE_1,
+                SpiMode::Mode2 => SPI_MODE_2,
+                SpiMode::Mode3 => SPI_MODE_3,
+            })
+            .lsb_first(false)
+            .build();
+        try!(spi.configure(&options));
+        Ok( SerialPi{device: spi})
     }
-    println!("{:?}", rx_buf);
-    Ok(())
+
+    /// reads until the `terminator` character or NUL is read and returns
+    /// the result as a String
+    pub fn read_to_u8(&mut self, terminator: char) -> io::Result<Vec<u8>>{
+        let mut data: Vec<u8> = Vec::new();;
+        loop{
+            let mut rx = [0_u8];
+            self.device.read(&mut rx).unwrap();
+            if rx[0] == (terminator as u8) {break;}
+            else {data.push(rx[0])}
+        }
+        Ok(data)
+    }
+
+    pub fn read_write(&mut self, write_data: Vec<u8>, terminator: char) -> io::Result<Vec<u8>>{
+        let mut read_data: Vec<u8> = Vec::with_capacity(1000);
+        let mut write_iterator = write_data.iter();
+        loop{
+            let mut rx = [0_u8];
+            let tx = match write_iterator.next(){
+                Some(byte) => [*byte],
+                None => break
+            };
+            {
+                let mut transfer = SpidevTransfer::read_write(&tx, &mut rx);
+                try!(self.device.transfer(&mut transfer));
+            }
+            read_data.push(rx[0]);
+        }
+        // if !read_data.contains(&(terminator as u8)){
+        //     read_data.append(&mut self.read_to_u8(terminator).unwrap());
+        // }
+        Ok(read_data)
+    }
 }
