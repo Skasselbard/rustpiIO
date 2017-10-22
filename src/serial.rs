@@ -130,7 +130,7 @@ impl SerialPi{
     /// reads until the `terminator` character or NUL is read and returns
     /// the result as a String
     pub fn read_to_u8(&mut self, terminator: char) -> io::Result<Vec<u8>>{
-        let mut data: Vec<u8> = Vec::new();;
+        let mut data: Vec<u8> = Vec::new();
         loop{
             let mut rx = [0_u8];
             self.device.read(&mut rx).unwrap();
