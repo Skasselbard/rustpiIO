@@ -37,7 +37,7 @@ impl GPIO {
         self.mode
     }
 
-    /// Changes the mode of the pin and writes the acording value to the fitting direction file
+    /// Changes the mode of the pin and writes the according value to the fitting direction file
     pub fn set_mode(&mut self, mode: GPIOMode) -> Result<&mut Self> {
         let mut direction = OpenOptions::new()
             .write(true)
@@ -52,7 +52,7 @@ impl GPIO {
 
     /// Initializes the gpio. Exports the pin with the /sys/class/gpio/export file.
     /// and calls the set_mode() function with the given mode.
-    /// Returns an Error if the gpio was already exportet earlier (inside or outside of the program)
+    /// Returns an Error if the gpio was already exported earlier (inside or outside of the program)
     pub fn new(gpio: u8, mode: GPIOMode) -> Result<Self> {
         if Path::new(&format!("{}gpio{}/", GPIO_PATH, gpio)).exists() {
             return Err(Error::new(
@@ -118,16 +118,16 @@ impl GPIO {
 /// Closes the gpio and write its pin number into /sys/class/gpio/unexport
 impl Drop for GPIO {
     fn drop(&mut self) {
-        let mut unexport = match OpenOptions::new()
+        if let Ok(mut unexport) = OpenOptions::new()
             .write(true)
             .open(format!("{}unexport", GPIO_PATH))
         {
-            Ok(f) => f,
-            Err(e) => panic!("file error: {}", e),
-        };
-        match unexport.write_all(format!("{}", self.pin).as_bytes()) {
-            Err(why) => panic!("couldn't close gpio {}: {}", self.pin, why),
-            Ok(_) => {}
+            match unexport.write_all(format!("{}", self.pin).as_bytes()) {
+                Err(why) => panic!("couldn't close gpio {}: {}", self.pin, why),
+                Ok(_) => {}
+            }
+        } else {
+            panic!("file error: {}")
         }
     }
 }

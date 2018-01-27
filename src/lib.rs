@@ -18,7 +18,7 @@
 // along with RustpiIO.  If not, see <http://www.gnu.org/licenses/>
 
 /*! 
- # DocuSchmocu
+ # Docu
  RustpiIO is a library to read and write the GPIO pins of a Raspberry Pi.  
  It uses the system interface under /sys/class/gpio/ provided by the linux OS.
 
@@ -71,7 +71,6 @@
 */
 
 extern crate spidev;
-extern crate bytes;
 
 mod globals;
 pub mod gpio;
