@@ -3,9 +3,8 @@ use std::io::{Error, ErrorKind};
 use spidev::{SPI_MODE_0, SPI_MODE_1, SPI_MODE_2, SPI_MODE_3, Spidev, SpidevOptions, SpidevTransfer};
 use globals::{SPI_PATH0, SPI_PATH1};
 use std::io::{BufRead, Read, Write};
-//use std::collections;
-//use std::{thread, time};
 
+#[derive(PartialEq)]
 pub enum Device {
     CE0 = 0,
     CE1 = 1,
@@ -30,7 +29,7 @@ pub enum Device {
     15.2 kHz  
     7629 Hz  
  */
-#[derive(Debug)]
+#[derive(Debug, PartialEq)]
 #[allow(non_camel_case_types)]
 pub enum Speed {
     Mhz125_0,
@@ -79,6 +78,7 @@ The most common spi modes. regulating the clock edge and polariy.
 Mode 0 seems to be the most used one.  
 See https://en.wikipedia.org/wiki/Serial_Peripheral_Interface_Bus#Clock_polarity_and_phase f. for an explanation 
 */
+#[derive(PartialEq)]
 pub enum SpiMode {
     Mode0,
     Mode1,
@@ -86,6 +86,7 @@ pub enum SpiMode {
     Mode3,
 }
 
+#[derive(PartialEq)]
 pub enum ComMode {
     FullDuplex,
     HalfDuplex,
@@ -140,43 +141,6 @@ impl SerialPi {
             read_buffer: Vec::with_capacity(100),
         })
     }
-
-    /// reads until the `terminator` character or NUL is read and returns
-    /// the result as a String
-    pub fn read_to_u8(&mut self, terminator: u8) -> io::Result<Vec<u8>> {
-        let mut data: Vec<u8> = Vec::new();
-        loop {
-            let mut rx = [0_u8];
-            self.device.read(&mut rx).unwrap();
-            if rx[0] == (terminator as u8) {
-                break;
-            } else {
-                data.push(rx[0])
-            }
-        }
-        Ok(data)
-    }
-
-    pub fn read_write(&mut self, write_data: Vec<u8>, terminator: u8) -> io::Result<Vec<u8>> {
-        let mut read_data: Vec<u8> = Vec::with_capacity(1000);
-        let mut write_iterator = write_data.iter();
-        loop {
-            let mut rx = [0_u8];
-            let tx = match write_iterator.next() {
-                Some(byte) => [*byte],
-                None => break,
-            };
-            {
-                let mut transfer = SpidevTransfer::read_write(&tx, &mut rx);
-                try!(self.device.transfer(&mut transfer));
-            }
-            read_data.push(rx[0]);
-        }
-        // if !read_data.contains(&(terminator as u8)){
-        //     read_data.append(&mut self.read_to_u8(terminator).unwrap());
-        // }
-        Ok(read_data)
-    }
 }
 
 impl Read for SerialPi {
@@ -202,5 +166,29 @@ impl BufRead for SerialPi {
     }
     fn consume(&mut self, amt: usize) {
         self.read_buffer.drain(0..(amt - 1));
+    }
+}
+
+impl Write for SerialPi {
+    fn write(&mut self, buf: &[u8]) -> io::Result<usize> {
+        if self.com_mode == ComMode::HalfDuplex {
+            self.device.write(buf)
+        } else {
+            let mut read_data: Vec<u8> = Vec::with_capacity(buf.len());
+            read_data.resize(buf.len(), 0 as u8);
+            {
+                let mut transfer = SpidevTransfer::read_write(buf, read_data.as_mut_slice());
+                try!(self.device.transfer(&mut transfer));
+            }
+            self.read_buffer.append(&mut read_data);
+            Ok(buf.len())
+        }
+    }
+    fn flush(&mut self) -> io::Result<()> {
+        if self.com_mode == ComMode::HalfDuplex {
+            self.device.flush()
+        } else {
+            Ok(())
+        }
     }
 }
