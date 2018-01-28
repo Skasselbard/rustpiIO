@@ -4,7 +4,9 @@ version = "0.1.0"
 authors = ["Tom Meyer<tom.meyer89@gmail.com"]
 include = ["src/*"]
 license = "GNU General Public License v3"
-keywords = ["raspberry", "pi", "gpio", "serial", "connection", "spi", "serial peripheral interface bus"]
+keywords = ["raspberry", "pi", "gpio", "serial", "connection", "spi", "serial peripheral interface bus", "raspbian"]
+repository = "https://github.com/Skasselbard/rustpiIO"
+exclude = ["src/bin/*"]
 
 [dependencies]
 spidev = "0.3.0"
