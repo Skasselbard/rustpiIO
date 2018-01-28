@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="generator" content="rustdoc">
+    <meta name="description" content="API documentation for the Rust `Speed` enum in crate `rustpi_io`.">
+    <meta name="keywords" content="rust, rustlang, rust-lang, Speed">
+
+    <title>rustpi_io::serial::Speed - Rust</title>
+
+    <link rel="stylesheet" type="text/css" href="../../normalize.css">
+    <link rel="stylesheet" type="text/css" href="../../rustdoc.css">
+    <link rel="stylesheet" type="text/css" href="../../main.css">
+    
+
+    
+    
+</head>
+<body class="rustdoc enum">
+    <!--[if lte IE 8]>
+    <div class="warning">
+        This old browser is unsupported and will most likely display funky
+        things.
+    </div>
+    <![endif]-->
+
+    
+
+    <nav class="sidebar">
+        
+        <p class='location'>Enum Speed</p><div class="block items"><ul><li><a href="#variants">Variants</a></li><li><a href="#implementations">Trait Implementations</a></li></ul></div><p class='location'><a href='../index.html'>rustpi_io</a>::<wbr><a href='index.html'>serial</a></p><script>window.sidebarCurrent = {name: 'Speed', ty: 'enum', relpath: ''};</script><script defer src="sidebar-items.js"></script>
+    </nav>
+
+    <nav class="sub">
+        <form class="search-form js-only">
+            <div class="search-container">
+                <input class="search-input" name="search"
+                       autocomplete="off"
+                       placeholder="Click or press ‘S’ to search, ‘?’ for more options…"
+                       type="search">
+            </div>
+        </form>
+    </nav>
+
+    <section id='main' class="content">
+<h1 class='fqn'><span class='in-band'>Enum <a href='../index.html'>rustpi_io</a>::<wbr><a href='index.html'>serial</a>::<wbr><a class="enum" href=''>Speed</a></span><span class='out-of-band'><span id='render-detail'>
+                   <a id="toggle-all-docs" href="javascript:void(0)" title="collapse all docs">
+                       [<span class='inner'>&#x2212;</span>]
+                   </a>
+               </span><a class='srclink' href='../../src/rustpi_io/serial.rs.html#56-72' title='goto source code'>[src]</a></span></h1>
+<pre class='rust enum'>pub enum Speed {
+    Mhz125_0,
+    Mhz62_5,
+    Mhz31_2,
+    Mhz15_6,
+    Mhz7_8,
+    Mhz3_9,
+    Khz1953,
+    Khz976,
+    Khz488,
+    Khz244,
+    Khz122,
+    Khz61,
+    Khz30_5,
+    Khz15_2,
+    Hz7629,
+}</pre><div class='docblock'><p>From <a href="https://www.raspberrypi.org/documentation/hardware/raspberrypi/spi/README.md#driver">https://www.raspberrypi.org/documentation/hardware/raspberrypi/spi/README.md#driver</a><br>
+Possible Speeds:<br>
+   125.0 MHz<br>
+   62.5 MHz<br>
+   31.2 MHz<br>
+   15.6 MHz<br>
+   7.8 MHz<br>
+   3.9 MHz<br>
+   1953 kHz<br>
+   976 kHz<br>
+   488 kHz<br>
+   244 kHz<br>
+   122 kHz<br>
+   61 kHz<br>
+   30.5 kHz<br>
+   15.2 kHz<br>
+   7629 Hz  </p>
+</div><h2 id='variants' class='variants small-section-header'>
+                   Variants<a href='#variants' class='anchor'></a></h2>
+<span id="variant.Mhz125_0" class="variant small-section-header"><a href="#variant.Mhz125_0" class="anchor field"></a><span id='Mhz125_0.v' class='invisible'><code>Mhz125_0</code></span></span><span id="variant.Mhz62_5" class="variant small-section-header"><a href="#variant.Mhz62_5" class="anchor field"></a><span id='Mhz62_5.v' class='invisible'><code>Mhz62_5</code></span></span><span id="variant.Mhz31_2" class="variant small-section-header"><a href="#variant.Mhz31_2" class="anchor field"></a><span id='Mhz31_2.v' class='invisible'><code>Mhz31_2</code></span></span><span id="variant.Mhz15_6" class="variant small-section-header"><a href="#variant.Mhz15_6" class="anchor field"></a><span id='Mhz15_6.v' class='invisible'><code>Mhz15_6</code></span></span><span id="variant.Mhz7_8" class="variant small-section-header"><a href="#variant.Mhz7_8" class="anchor field"></a><span id='Mhz7_8.v' class='invisible'><code>Mhz7_8</code></span></span><span id="variant.Mhz3_9" class="variant small-section-header"><a href="#variant.Mhz3_9" class="anchor field"></a><span id='Mhz3_9.v' class='invisible'><code>Mhz3_9</code></span></span><span id="variant.Khz1953" class="variant small-section-header"><a href="#variant.Khz1953" class="anchor field"></a><span id='Khz1953.v' class='invisible'><code>Khz1953</code></span></span><span id="variant.Khz976" class="variant small-section-header"><a href="#variant.Khz976" class="anchor field"></a><span id='Khz976.v' class='invisible'><code>Khz976</code></span></span><span id="variant.Khz488" class="variant small-section-header"><a href="#variant.Khz488" class="anchor field"></a><span id='Khz488.v' class='invisible'><code>Khz488</code></span></span><span id="variant.Khz244" class="variant small-section-header"><a href="#variant.Khz244" class="anchor field"></a><span id='Khz244.v' class='invisible'><code>Khz244</code></span></span><span id="variant.Khz122" class="variant small-section-header"><a href="#variant.Khz122" class="anchor field"></a><span id='Khz122.v' class='invisible'><code>Khz122</code></span></span><span id="variant.Khz61" class="variant small-section-header"><a href="#variant.Khz61" class="anchor field"></a><span id='Khz61.v' class='invisible'><code>Khz61</code></span></span><span id="variant.Khz30_5" class="variant small-section-header"><a href="#variant.Khz30_5" class="anchor field"></a><span id='Khz30_5.v' class='invisible'><code>Khz30_5</code></span></span><span id="variant.Khz15_2" class="variant small-section-header"><a href="#variant.Khz15_2" class="anchor field"></a><span id='Khz15_2.v' class='invisible'><code>Khz15_2</code></span></span><span id="variant.Hz7629" class="variant small-section-header"><a href="#variant.Hz7629" class="anchor field"></a><span id='Hz7629.v' class='invisible'><code>Hz7629</code></span></span>
+            <h2 id='implementations' class='small-section-header'>
+              Trait Implementations<a href='#implementations' class='anchor'></a>
+            </h2>
+        <h3 id='impl-Debug' class='impl'><span class='in-band'><code>impl <a class="trait" href="https://doc.rust-lang.org/nightly/core/fmt/trait.Debug.html" title="trait core::fmt::Debug">Debug</a> for <a class="enum" href="../../rustpi_io/serial/enum.Speed.html" title="enum rustpi_io::serial::Speed">Speed</a></code><a href='#impl-Debug' class='anchor'></a></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../../src/rustpi_io/serial.rs.html#54' title='goto source code'>[src]</a></span></h3>
+<div class='impl-items'><h4 id='method.fmt' class="method"><span id='fmt.v' class='invisible'><code>fn <a href='https://doc.rust-lang.org/nightly/core/fmt/trait.Debug.html#tymethod.fmt' class='fnname'>fmt</a>(&amp;self, __arg_0: &amp;mut <a class="struct" href="https://doc.rust-lang.org/nightly/core/fmt/struct.Formatter.html" title="struct core::fmt::Formatter">Formatter</a>) -&gt; <a class="type" href="https://doc.rust-lang.org/nightly/core/fmt/type.Result.html" title="type core::fmt::Result">Result</a></code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../../src/rustpi_io/serial.rs.html#54' title='goto source code'>[src]</a></span></h4>
+<div class='docblock'><p>Formats the value using the given formatter.</p>
+</div></div><h3 id='impl-PartialEq' class='impl'><span class='in-band'><code>impl <a class="trait" href="https://doc.rust-lang.org/nightly/core/cmp/trait.PartialEq.html" title="trait core::cmp::PartialEq">PartialEq</a> for <a class="enum" href="../../rustpi_io/serial/enum.Speed.html" title="enum rustpi_io::serial::Speed">Speed</a></code><a href='#impl-PartialEq' class='anchor'></a></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../../src/rustpi_io/serial.rs.html#54' title='goto source code'>[src]</a></span></h3>
+<div class='impl-items'><h4 id='method.eq' class="method"><span id='eq.v' class='invisible'><code>fn <a href='https://doc.rust-lang.org/nightly/core/cmp/trait.PartialEq.html#tymethod.eq' class='fnname'>eq</a>(&amp;self, __arg_0: &amp;<a class="enum" href="../../rustpi_io/serial/enum.Speed.html" title="enum rustpi_io::serial::Speed">Speed</a>) -&gt; <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.bool.html">bool</a></code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../../src/rustpi_io/serial.rs.html#54' title='goto source code'>[src]</a></span></h4>
+<div class='docblock'><p>This method tests for <code>self</code> and <code>other</code> values to be equal, and is used by <code>==</code>. <a href="https://doc.rust-lang.org/nightly/core/cmp/trait.PartialEq.html#tymethod.eq">Read more</a></p>
+</div><h4 id='method.ne' class="method"><span id='ne.v' class='invisible'><code>fn <a href='https://doc.rust-lang.org/nightly/core/cmp/trait.PartialEq.html#method.ne' class='fnname'>ne</a>(&amp;self, other: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.reference.html">&amp;</a>Rhs) -&gt; <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.bool.html">bool</a></code></span><span class='out-of-band'><div class='ghost'></div><div class='since' title='Stable since Rust version 1.0.0'>1.0.0</div><a class='srclink' href='https://doc.rust-lang.org/nightly/src/core/cmp.rs.html#121' title='goto source code'>[src]</a></span></h4>
+<div class='docblock'><p>This method tests for <code>!=</code>.</p>
+</div></div></section>
+    <section id='search' class="content hidden"></section>
+
+    <section class="footer"></section>
+
+    <aside id="help" class="hidden">
+        <div>
+            <h1 class="hidden">Help</h1>
+
+            <div class="shortcuts">
+                <h2>Keyboard Shortcuts</h2>
+
+                <dl>
+                    <dt>?</dt>
+                    <dd>Show this help dialog</dd>
+                    <dt>S</dt>
+                    <dd>Focus the search field</dd>
+                    <dt>&larrb;</dt>
+                    <dd>Move up in search results</dd>
+                    <dt>&rarrb;</dt>
+                    <dd>Move down in search results</dd>
+                    <dt>&#9166;</dt>
+                    <dd>Go to active search result</dd>
+                    <dt>+</dt>
+                    <dd>Collapse/expand all sections</dd>
+                </dl>
+            </div>
+
+            <div class="infos">
+                <h2>Search Tricks</h2>
+
+                <p>
+                    Prefix searches with a type followed by a colon (e.g.
+                    <code>fn:</code>) to restrict the search to a given type.
+                </p>
+
+                <p>
+                    Accepted types are: <code>fn</code>, <code>mod</code>,
+                    <code>struct</code>, <code>enum</code>,
+                    <code>trait</code>, <code>type</code>, <code>macro</code>,
+                    and <code>const</code>.
+                </p>
+
+                <p>
+                    Search functions by type signature (e.g.
+                    <code>vec -> usize</code> or <code>* -> vec</code>)
+                </p>
+            </div>
+        </div>
+    </aside>
+
+    
+
+    <script>
+        window.rootPath = "../../";
+        window.currentCrate = "rustpi_io";
+    </script>
+    <script src="../../main.js"></script>
+    <script defer src="../../search-index.js"></script>
+</body>
+</html>

@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="generator" content="rustdoc">
+    <meta name="description" content="API documentation for the Rust `SerialPi` struct in crate `rustpi_io`.">
+    <meta name="keywords" content="rust, rustlang, rust-lang, SerialPi">
+
+    <title>rustpi_io::serial::SerialPi - Rust</title>
+
+    <link rel="stylesheet" type="text/css" href="../../normalize.css">
+    <link rel="stylesheet" type="text/css" href="../../rustdoc.css">
+    <link rel="stylesheet" type="text/css" href="../../main.css">
+    
+
+    
+    
+</head>
+<body class="rustdoc struct">
+    <!--[if lte IE 8]>
+    <div class="warning">
+        This old browser is unsupported and will most likely display funky
+        things.
+    </div>
+    <![endif]-->
+
+    
+
+    <nav class="sidebar">
+        
+        <p class='location'>Struct SerialPi</p><div class="block items"><ul><li><a href="#fields">Fields</a></li><li><a href="#methods">Methods</a></li><li><a href="#implementations">Trait Implementations</a></li></ul></div><p class='location'><a href='../index.html'>rustpi_io</a>::<wbr><a href='index.html'>serial</a></p><script>window.sidebarCurrent = {name: 'SerialPi', ty: 'struct', relpath: ''};</script><script defer src="sidebar-items.js"></script>
+    </nav>
+
+    <nav class="sub">
+        <form class="search-form js-only">
+            <div class="search-container">
+                <input class="search-input" name="search"
+                       autocomplete="off"
+                       placeholder="Click or press ‘S’ to search, ‘?’ for more options…"
+                       type="search">
+            </div>
+        </form>
+    </nav>
+
+    <section id='main' class="content">
+<h1 class='fqn'><span class='in-band'>Struct <a href='../index.html'>rustpi_io</a>::<wbr><a href='index.html'>serial</a>::<wbr><a class="struct" href=''>SerialPi</a></span><span class='out-of-band'><span id='render-detail'>
+                   <a id="toggle-all-docs" href="javascript:void(0)" title="collapse all docs">
+                       [<span class='inner'>&#x2212;</span>]
+                   </a>
+               </span><a class='srclink' href='../../src/rustpi_io/serial.rs.html#156-160' title='goto source code'>[src]</a></span></h1>
+<pre class='rust struct'>pub struct SerialPi {
+    pub com_mode: <a class="enum" href="../../rustpi_io/serial/enum.ComMode.html" title="enum rustpi_io::serial::ComMode">ComMode</a>,
+    // some fields omitted
+}</pre><div class='docblock'><p>Interface for the spi bus of the Raspberry Pi.</p>
+
+<p>A SerialPi spi struct can be opened to access the serial interface of the Raspberry Pi as Master. It will initialize the necessary components for the communication. A device, a bus clock, a spi mode and a communication mode have to be configured.</p>
+
+<p>The device correspond to the Chip Enable Pins of the raspberry pi. Look at the pin layout of of your raspberry pi to determine which pin is associated with which CE device.</p>
+
+<p>The bus clock determines the communication speed. Use a speed that your slave device can handle.</p>
+
+<p>The spi mode sets clock polarity and clock phase of the transmission. The configuration has to match with the slave device. Mode 0 is said to be the most common. For an explanation you can go to the <a href="https://en.wikipedia.org/wiki/Serial_Peripheral_Interface_Bus#Clock_polarity_and_phase">wikipedia spi article</a>.</p>
+
+<p>The communication mode can be Full or HalfDuplex. In full duplex mode, for every byte that is send, a byte will be received. In half duplex mode the bytes that are received during a transmission are ignored.</p>
+
+<p>In full duplex mode, the data that was received with <code>write</code> will be buffered internally. Calls to the <code>Read</code> and <code>BufRead</code> trait implementation will first read out the buffered content and will issue an actual spi read if the buffer is exhausted.
+The buffer will be reallocated if the last read bytes do not fit. It will preserve the capacity after that until a resize is issued with <code>try_shrink_to</code>.</p>
+
+<p>In half duplex mode the buffer will not be filled when calling write, but it will be consumed when calling read.</p>
+</div><h2 id='fields' class='fields small-section-header'>
+                       Fields<a href='#fields' class='anchor'></a></h2><span id="structfield.com_mode" class="structfield small-section-header">
+                           <a href="#structfield.com_mode" class="anchor field"></a>
+                           <span id="com_mode.v" class='invisible'>
+                           <code>com_mode: <a class="enum" href="../../rustpi_io/serial/enum.ComMode.html" title="enum rustpi_io::serial::ComMode">ComMode</a></code>
+                           </span></span>
+                    <h2 id='methods' class='small-section-header'>
+                      Methods<a href='#methods' class='anchor'></a>
+                    </h2>
+                <h3 id='impl' class='impl'><span class='in-band'><code>impl <a class="struct" href="../../rustpi_io/serial/struct.SerialPi.html" title="struct rustpi_io::serial::SerialPi">SerialPi</a></code><a href='#impl' class='anchor'></a></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../../src/rustpi_io/serial.rs.html#162-240' title='goto source code'>[src]</a></span></h3>
+<div class='impl-items'><h4 id='method.new' class="method"><span id='new.v' class='invisible'><code>pub fn <a href='#method.new' class='fnname'>new</a>(<br>&nbsp;&nbsp;&nbsp;&nbsp;device: <a class="enum" href="../../rustpi_io/serial/enum.Device.html" title="enum rustpi_io::serial::Device">Device</a>, <br>&nbsp;&nbsp;&nbsp;&nbsp;speed: <a class="enum" href="../../rustpi_io/serial/enum.Speed.html" title="enum rustpi_io::serial::Speed">Speed</a>, <br>&nbsp;&nbsp;&nbsp;&nbsp;spi_mode: <a class="enum" href="../../rustpi_io/serial/enum.SpiMode.html" title="enum rustpi_io::serial::SpiMode">SpiMode</a>, <br>&nbsp;&nbsp;&nbsp;&nbsp;communication_mode: <a class="enum" href="../../rustpi_io/serial/enum.ComMode.html" title="enum rustpi_io::serial::ComMode">ComMode</a><br>) -&gt; <a class="type" href="https://doc.rust-lang.org/nightly/std/io/error/type.Result.html" title="type std::io::error::Result">Result</a>&lt;<a class="struct" href="../../rustpi_io/serial/struct.SerialPi.html" title="struct rustpi_io::serial::SerialPi">SerialPi</a>&gt;</code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../../src/rustpi_io/serial.rs.html#166-173' title='goto source code'>[src]</a></span></h4>
+<div class='docblock'><p>Calls <code>with_capacity</code> with a buffer size of 1000 bytes.</p>
+</div><h4 id='method.with_capacity' class="method"><span id='with_capacity.v' class='invisible'><code>pub fn <a href='#method.with_capacity' class='fnname'>with_capacity</a>(<br>&nbsp;&nbsp;&nbsp;&nbsp;device: <a class="enum" href="../../rustpi_io/serial/enum.Device.html" title="enum rustpi_io::serial::Device">Device</a>, <br>&nbsp;&nbsp;&nbsp;&nbsp;speed: <a class="enum" href="../../rustpi_io/serial/enum.Speed.html" title="enum rustpi_io::serial::Speed">Speed</a>, <br>&nbsp;&nbsp;&nbsp;&nbsp;spi_mode: <a class="enum" href="../../rustpi_io/serial/enum.SpiMode.html" title="enum rustpi_io::serial::SpiMode">SpiMode</a>, <br>&nbsp;&nbsp;&nbsp;&nbsp;communication_mode: <a class="enum" href="../../rustpi_io/serial/enum.ComMode.html" title="enum rustpi_io::serial::ComMode">ComMode</a>, <br>&nbsp;&nbsp;&nbsp;&nbsp;buffer_capacity: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.usize.html">usize</a><br>) -&gt; <a class="type" href="https://doc.rust-lang.org/nightly/std/io/error/type.Result.html" title="type std::io::error::Result">Result</a>&lt;<a class="struct" href="../../rustpi_io/serial/struct.SerialPi.html" title="struct rustpi_io::serial::SerialPi">SerialPi</a>&gt;</code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../../src/rustpi_io/serial.rs.html#183-218' title='goto source code'>[src]</a></span></h4>
+<div class='docblock'><p>Creates a serial wrapper for the raspberry pi. Also sets the buffers capacity.</p>
+
+<p>Note: The SpiMode and the ComMode have a default value.</p>
+
+<h1 id='errors' class='section-header'><a href='#errors'>Errors</a></h1>
+<p>Can return an error if the spi device can&#39;t be opened. It might be already in use or the raspberry is not configured correctly. Check the <a href="https://www.raspberrypi.org/documentation/hardware/raspberrypi/spi/README.md#overview">documentation</a> of the raspberry pi in this case.</p>
+</div><h4 id='method.buffer_capacity' class="method"><span id='buffer_capacity.v' class='invisible'><code>pub fn <a href='#method.buffer_capacity' class='fnname'>buffer_capacity</a>(&amp;self) -&gt; <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.usize.html">usize</a></code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../../src/rustpi_io/serial.rs.html#223-225' title='goto source code'>[src]</a></span></h4>
+<div class='docblock'><p>Returns the current capacity of the internal buffer. To change it call <code>try_shrink_to</code>. Maybe you have to <code>consume</code> or <code>read</code> some bytes of the buffer first.</p>
+</div><h4 id='method.try_shrink_to' class="method"><span id='try_shrink_to.v' class='invisible'><code>pub fn <a href='#method.try_shrink_to' class='fnname'>try_shrink_to</a>(&amp;mut self, desired_capacity: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.usize.html">usize</a>) -&gt; <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.usize.html">usize</a></code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../../src/rustpi_io/serial.rs.html#232-239' title='goto source code'>[src]</a></span></h4>
+<div class='docblock'><p>Shrinks the internal buffer to fit its length. If the new capacity is les then the desired, the capacity is extended to match the desired.
+Already read bytes are not dropped. To do that call <code>consume</code>.
+The actual capacity might be greater than the desired.</p>
+</div></div>
+            <h2 id='implementations' class='small-section-header'>
+              Trait Implementations<a href='#implementations' class='anchor'></a>
+            </h2>
+        <h3 id='impl-Read' class='impl'><span class='in-band'><code>impl <a class="trait" href="https://doc.rust-lang.org/nightly/std/io/trait.Read.html" title="trait std::io::Read">Read</a> for <a class="struct" href="../../rustpi_io/serial/struct.SerialPi.html" title="struct rustpi_io::serial::SerialPi">SerialPi</a></code><a href='#impl-Read' class='anchor'></a></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../../src/rustpi_io/serial.rs.html#242-255' title='goto source code'>[src]</a></span></h3>
+<div class='impl-items'><h4 id='method.read' class="method"><span id='read.v' class='invisible'><code>fn <a href='https://doc.rust-lang.org/nightly/std/io/trait.Read.html#tymethod.read' class='fnname'>read</a>(&amp;mut self, buf: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.slice.html">&amp;mut [</a><a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.u8.html">u8</a><a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.slice.html">]</a>) -&gt; <a class="type" href="https://doc.rust-lang.org/nightly/std/io/error/type.Result.html" title="type std::io::error::Result">Result</a>&lt;<a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.usize.html">usize</a>&gt;</code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../../src/rustpi_io/serial.rs.html#246-254' title='goto source code'>[src]</a></span></h4>
+<div class='docblock'><p>Fills buf with the bytes from the internal buffer. If buf.len() is greater then the buffered byte count, the serial device is read until buf is filled.</p>
+</div><h4 id='method.initializer' class="method"><span id='initializer.v' class='invisible'><code>unsafe fn <a href='https://doc.rust-lang.org/nightly/std/io/trait.Read.html#method.initializer' class='fnname'>initializer</a>(&amp;self) -&gt; <a class="struct" href="https://doc.rust-lang.org/nightly/std/io/struct.Initializer.html" title="struct std::io::Initializer">Initializer</a></code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='https://doc.rust-lang.org/nightly/src/std/io/mod.rs.html#535-537' title='goto source code'>[src]</a></span></h4>
+<div class='stability'><div class='stab unstable'><span class=microscope>🔬</span> This is a nightly-only experimental API.  (<code>read_initializer</code>)</div></div><div class='docblock'><p>Determines if this <code>Read</code>er can work with buffers of uninitialized memory. <a href="https://doc.rust-lang.org/nightly/std/io/trait.Read.html#method.initializer">Read more</a></p>
+</div><h4 id='method.read_to_end' class="method"><span id='read_to_end.v' class='invisible'><code>fn <a href='https://doc.rust-lang.org/nightly/std/io/trait.Read.html#method.read_to_end' class='fnname'>read_to_end</a>(&amp;mut self, buf: &amp;mut <a class="struct" href="https://doc.rust-lang.org/nightly/alloc/vec/struct.Vec.html" title="struct alloc::vec::Vec">Vec</a>&lt;<a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.u8.html">u8</a>&gt;) -&gt; <a class="enum" href="https://doc.rust-lang.org/nightly/core/result/enum.Result.html" title="enum core::result::Result">Result</a>&lt;<a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.usize.html">usize</a>, <a class="struct" href="https://doc.rust-lang.org/nightly/std/io/error/struct.Error.html" title="struct std::io::error::Error">Error</a>&gt;</code></span><span class='out-of-band'><div class='ghost'></div><div class='since' title='Stable since Rust version 1.0.0'>1.0.0</div><a class='srclink' href='https://doc.rust-lang.org/nightly/src/std/io/mod.rs.html#582-584' title='goto source code'>[src]</a></span></h4>
+<div class='docblock'><p>Read all bytes until EOF in this source, placing them into <code>buf</code>. <a href="https://doc.rust-lang.org/nightly/std/io/trait.Read.html#method.read_to_end">Read more</a></p>
+</div><h4 id='method.read_to_string' class="method"><span id='read_to_string.v' class='invisible'><code>fn <a href='https://doc.rust-lang.org/nightly/std/io/trait.Read.html#method.read_to_string' class='fnname'>read_to_string</a>(&amp;mut self, buf: &amp;mut <a class="struct" href="https://doc.rust-lang.org/nightly/alloc/string/struct.String.html" title="struct alloc::string::String">String</a>) -&gt; <a class="enum" href="https://doc.rust-lang.org/nightly/core/result/enum.Result.html" title="enum core::result::Result">Result</a>&lt;<a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.usize.html">usize</a>, <a class="struct" href="https://doc.rust-lang.org/nightly/std/io/error/struct.Error.html" title="struct std::io::error::Error">Error</a>&gt;</code></span><span class='out-of-band'><div class='ghost'></div><div class='since' title='Stable since Rust version 1.0.0'>1.0.0</div><a class='srclink' href='https://doc.rust-lang.org/nightly/src/std/io/mod.rs.html#620-631' title='goto source code'>[src]</a></span></h4>
+<div class='docblock'><p>Read all bytes until EOF in this source, placing them into <code>buf</code>. <a href="https://doc.rust-lang.org/nightly/std/io/trait.Read.html#method.read_to_string">Read more</a></p>
+</div><h4 id='method.read_exact' class="method"><span id='read_exact.v' class='invisible'><code>fn <a href='https://doc.rust-lang.org/nightly/std/io/trait.Read.html#method.read_exact' class='fnname'>read_exact</a>(&amp;mut self, buf: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.slice.html">&amp;mut [</a><a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.u8.html">u8</a><a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.slice.html">]</a>) -&gt; <a class="enum" href="https://doc.rust-lang.org/nightly/core/result/enum.Result.html" title="enum core::result::Result">Result</a>&lt;<a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.tuple.html">()</a>, <a class="struct" href="https://doc.rust-lang.org/nightly/std/io/error/struct.Error.html" title="struct std::io::error::Error">Error</a>&gt;</code></span><span class='out-of-band'><div class='ghost'></div><div class='since' title='Stable since Rust version 1.6.0'>1.6.0</div><a class='srclink' href='https://doc.rust-lang.org/nightly/src/std/io/mod.rs.html#683-698' title='goto source code'>[src]</a></span></h4>
+<div class='docblock'><p>Read the exact number of bytes required to fill <code>buf</code>. <a href="https://doc.rust-lang.org/nightly/std/io/trait.Read.html#method.read_exact">Read more</a></p>
+</div><h4 id='method.by_ref' class="method"><span id='by_ref.v' class='invisible'><code>fn <a href='https://doc.rust-lang.org/nightly/std/io/trait.Read.html#method.by_ref' class='fnname'>by_ref</a>(&amp;mut self) -&gt; <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.reference.html">&amp;mut </a>Self</code></span><span class='out-of-band'><div class='ghost'></div><div class='since' title='Stable since Rust version 1.0.0'>1.0.0</div><a class='srclink' href='https://doc.rust-lang.org/nightly/src/std/io/mod.rs.html#735' title='goto source code'>[src]</a></span></h4>
+<div class='docblock'><p>Creates a &quot;by reference&quot; adaptor for this instance of <code>Read</code>. <a href="https://doc.rust-lang.org/nightly/std/io/trait.Read.html#method.by_ref">Read more</a></p>
+</div><h4 id='method.bytes' class="method"><span id='bytes.v' class='invisible'><code>fn <a href='https://doc.rust-lang.org/nightly/std/io/trait.Read.html#method.bytes' class='fnname'>bytes</a>(self) -&gt; <a class="struct" href="https://doc.rust-lang.org/nightly/std/io/struct.Bytes.html" title="struct std::io::Bytes">Bytes</a>&lt;Self&gt;</code></span><span class='out-of-band'><div class='ghost'></div><div class='since' title='Stable since Rust version 1.0.0'>1.0.0</div><a class='srclink' href='https://doc.rust-lang.org/nightly/src/std/io/mod.rs.html#771-773' title='goto source code'>[src]</a></span></h4>
+<div class='docblock'><p>Transforms this <code>Read</code> instance to an [<code>Iterator</code>] over its bytes. <a href="https://doc.rust-lang.org/nightly/std/io/trait.Read.html#method.bytes">Read more</a></p>
+</div><h4 id='method.chars' class="method"><span id='chars.v' class='invisible'><code>fn <a href='https://doc.rust-lang.org/nightly/std/io/trait.Read.html#method.chars' class='fnname'>chars</a>(self) -&gt; <a class="struct" href="https://doc.rust-lang.org/nightly/std/io/struct.Chars.html" title="struct std::io::Chars">Chars</a>&lt;Self&gt;</code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='https://doc.rust-lang.org/nightly/src/std/io/mod.rs.html#815-817' title='goto source code'>[src]</a></span></h4>
+<div class='stability'><div class='stab unstable'><details><summary><span class=microscope>🔬</span> This is a nightly-only experimental API.  (<code>io</code>)</summary><p>the semantics of a partial read/write of where errors happen is currently unclear and may change</p>
+</details></div></div><div class='docblock'><p>Transforms this <code>Read</code> instance to an [<code>Iterator</code>] over [<code>char</code>]s. <a href="https://doc.rust-lang.org/nightly/std/io/trait.Read.html#method.chars">Read more</a></p>
+</div><h4 id='method.chain' class="method"><span id='chain.v' class='invisible'><code>fn <a href='https://doc.rust-lang.org/nightly/std/io/trait.Read.html#method.chain' class='fnname'>chain</a>&lt;R&gt;(self, next: R) -&gt; <a class="struct" href="https://doc.rust-lang.org/nightly/std/io/struct.Chain.html" title="struct std::io::Chain">Chain</a>&lt;Self, R&gt; <span class="where fmt-newline">where<br>&nbsp;&nbsp;&nbsp;&nbsp;R: <a class="trait" href="https://doc.rust-lang.org/nightly/std/io/trait.Read.html" title="trait std::io::Read">Read</a>,&nbsp;</span></code></span><span class='out-of-band'><div class='ghost'></div><div class='since' title='Stable since Rust version 1.0.0'>1.0.0</div><a class='srclink' href='https://doc.rust-lang.org/nightly/src/std/io/mod.rs.html#850-852' title='goto source code'>[src]</a></span></h4>
+<div class='docblock'><p>Creates an adaptor which will chain this stream with another. <a href="https://doc.rust-lang.org/nightly/std/io/trait.Read.html#method.chain">Read more</a></p>
+</div><h4 id='method.take' class="method"><span id='take.v' class='invisible'><code>fn <a href='https://doc.rust-lang.org/nightly/std/io/trait.Read.html#method.take' class='fnname'>take</a>(self, limit: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.u64.html">u64</a>) -&gt; <a class="struct" href="https://doc.rust-lang.org/nightly/std/io/struct.Take.html" title="struct std::io::Take">Take</a>&lt;Self&gt;</code></span><span class='out-of-band'><div class='ghost'></div><div class='since' title='Stable since Rust version 1.0.0'>1.0.0</div><a class='srclink' href='https://doc.rust-lang.org/nightly/src/std/io/mod.rs.html#886-888' title='goto source code'>[src]</a></span></h4>
+<div class='docblock'><p>Creates an adaptor which will read at most <code>limit</code> bytes from it. <a href="https://doc.rust-lang.org/nightly/std/io/trait.Read.html#method.take">Read more</a></p>
+</div></div><h3 id='impl-BufRead' class='impl'><span class='in-band'><code>impl <a class="trait" href="https://doc.rust-lang.org/nightly/std/io/trait.BufRead.html" title="trait std::io::BufRead">BufRead</a> for <a class="struct" href="../../rustpi_io/serial/struct.SerialPi.html" title="struct rustpi_io::serial::SerialPi">SerialPi</a></code><a href='#impl-BufRead' class='anchor'></a></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../../src/rustpi_io/serial.rs.html#257-298' title='goto source code'>[src]</a></span></h3>
+<div class='impl-items'><h4 id='method.fill_buf' class="method"><span id='fill_buf.v' class='invisible'><code>fn <a href='https://doc.rust-lang.org/nightly/std/io/trait.BufRead.html#tymethod.fill_buf' class='fnname'>fill_buf</a>(&amp;mut self) -&gt; <a class="type" href="https://doc.rust-lang.org/nightly/std/io/error/type.Result.html" title="type std::io::error::Result">Result</a>&lt;<a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.slice.html">&amp;[</a><a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.u8.html">u8</a><a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.slice.html">]</a>&gt;</code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../../src/rustpi_io/serial.rs.html#266-284' title='goto source code'>[src]</a></span></h4>
+<div class='docblock'><p>Does nothing if <a href="./enum.ComMode.html"><code>ComMode</code></a> is not <a href="./enum.ComMode.html#variant.FullDuplex"><code>ComMode::FullDuplex</code></a> and returns the internal buffer as slice.</p>
+
+<p>Tries to read the full buffer capacity if <a href="./enum.ComMode.html"><code>ComMode</code></a> is <a href="./enum.ComMode.html#variant.FullDuplex"><code>ComMode::FullDuplex</code></a>. returns all bytes that could be read.</p>
+</div><h4 id='method.consume' class="method"><span id='consume.v' class='invisible'><code>fn <a href='https://doc.rust-lang.org/nightly/std/io/trait.BufRead.html#tymethod.consume' class='fnname'>consume</a>(&amp;mut self, amt: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.usize.html">usize</a>)</code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../../src/rustpi_io/serial.rs.html#293-297' title='goto source code'>[src]</a></span></h4>
+<div class='docblock'><p>Does nothing if <a href="./enum.ComMode.html"><code>ComMode</code></a> is not <a href="./enum.ComMode.html#variant.FullDuplex"><code>ComMode::FullDuplex</code></a>.</p>
+
+<p>Drains the first amt bytes from the internal buffer if <a href="./enum.ComMode.html"><code>ComMode</code></a> is <a href="./enum.ComMode.html#variant.FullDuplex"><code>ComMode::FullDuplex</code></a>.</p>
+</div><h4 id='method.read_until' class="method"><span id='read_until.v' class='invisible'><code>fn <a href='https://doc.rust-lang.org/nightly/std/io/trait.BufRead.html#method.read_until' class='fnname'>read_until</a>(&amp;mut self, byte: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.u8.html">u8</a>, buf: &amp;mut <a class="struct" href="https://doc.rust-lang.org/nightly/alloc/vec/struct.Vec.html" title="struct alloc::vec::Vec">Vec</a>&lt;<a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.u8.html">u8</a>&gt;) -&gt; <a class="enum" href="https://doc.rust-lang.org/nightly/core/result/enum.Result.html" title="enum core::result::Result">Result</a>&lt;<a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.usize.html">usize</a>, <a class="struct" href="https://doc.rust-lang.org/nightly/std/io/error/struct.Error.html" title="struct std::io::error::Error">Error</a>&gt;</code></span><span class='out-of-band'><div class='ghost'></div><div class='since' title='Stable since Rust version 1.0.0'>1.0.0</div><a class='srclink' href='https://doc.rust-lang.org/nightly/src/std/io/mod.rs.html#1459-1461' title='goto source code'>[src]</a></span></h4>
+<div class='docblock'><p>Read all bytes into <code>buf</code> until the delimiter <code>byte</code> or EOF is reached. <a href="https://doc.rust-lang.org/nightly/std/io/trait.BufRead.html#method.read_until">Read more</a></p>
+</div><h4 id='method.read_line' class="method"><span id='read_line.v' class='invisible'><code>fn <a href='https://doc.rust-lang.org/nightly/std/io/trait.BufRead.html#method.read_line' class='fnname'>read_line</a>(&amp;mut self, buf: &amp;mut <a class="struct" href="https://doc.rust-lang.org/nightly/alloc/string/struct.String.html" title="struct alloc::string::String">String</a>) -&gt; <a class="enum" href="https://doc.rust-lang.org/nightly/core/result/enum.Result.html" title="enum core::result::Result">Result</a>&lt;<a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.usize.html">usize</a>, <a class="struct" href="https://doc.rust-lang.org/nightly/std/io/error/struct.Error.html" title="struct std::io::error::Error">Error</a>&gt;</code></span><span class='out-of-band'><div class='ghost'></div><div class='since' title='Stable since Rust version 1.0.0'>1.0.0</div><a class='srclink' href='https://doc.rust-lang.org/nightly/src/std/io/mod.rs.html#1514-1519' title='goto source code'>[src]</a></span></h4>
+<div class='docblock'><p>Read all bytes until a newline (the 0xA byte) is reached, and append them to the provided buffer. <a href="https://doc.rust-lang.org/nightly/std/io/trait.BufRead.html#method.read_line">Read more</a></p>
+</div><h4 id='method.split' class="method"><span id='split.v' class='invisible'><code>fn <a href='https://doc.rust-lang.org/nightly/std/io/trait.BufRead.html#method.split' class='fnname'>split</a>(self, byte: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.u8.html">u8</a>) -&gt; <a class="struct" href="https://doc.rust-lang.org/nightly/std/io/struct.Split.html" title="struct std::io::Split">Split</a>&lt;Self&gt;</code></span><span class='out-of-band'><div class='ghost'></div><div class='since' title='Stable since Rust version 1.0.0'>1.0.0</div><a class='srclink' href='https://doc.rust-lang.org/nightly/src/std/io/mod.rs.html#1555-1557' title='goto source code'>[src]</a></span></h4>
+<div class='docblock'><p>Returns an iterator over the contents of this reader split on the byte <code>byte</code>. <a href="https://doc.rust-lang.org/nightly/std/io/trait.BufRead.html#method.split">Read more</a></p>
+</div><h4 id='method.lines' class="method"><span id='lines.v' class='invisible'><code>fn <a href='https://doc.rust-lang.org/nightly/std/io/trait.BufRead.html#method.lines' class='fnname'>lines</a>(self) -&gt; <a class="struct" href="https://doc.rust-lang.org/nightly/std/io/struct.Lines.html" title="struct std::io::Lines">Lines</a>&lt;Self&gt;</code></span><span class='out-of-band'><div class='ghost'></div><div class='since' title='Stable since Rust version 1.0.0'>1.0.0</div><a class='srclink' href='https://doc.rust-lang.org/nightly/src/std/io/mod.rs.html#1594-1596' title='goto source code'>[src]</a></span></h4>
+<div class='docblock'><p>Returns an iterator over the lines of this reader. <a href="https://doc.rust-lang.org/nightly/std/io/trait.BufRead.html#method.lines">Read more</a></p>
+</div></div><h3 id='impl-Write' class='impl'><span class='in-band'><code>impl <a class="trait" href="https://doc.rust-lang.org/nightly/std/io/trait.Write.html" title="trait std::io::Write">Write</a> for <a class="struct" href="../../rustpi_io/serial/struct.SerialPi.html" title="struct rustpi_io::serial::SerialPi">SerialPi</a></code><a href='#impl-Write' class='anchor'></a></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../../src/rustpi_io/serial.rs.html#300-339' title='goto source code'>[src]</a></span></h3>
+<div class='impl-items'><h4 id='method.write' class="method"><span id='write.v' class='invisible'><code>fn <a href='https://doc.rust-lang.org/nightly/std/io/trait.Write.html#tymethod.write' class='fnname'>write</a>(&amp;mut self, buf: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.slice.html">&amp;[</a><a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.u8.html">u8</a><a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.slice.html">]</a>) -&gt; <a class="type" href="https://doc.rust-lang.org/nightly/std/io/error/type.Result.html" title="type std::io::error::Result">Result</a>&lt;<a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.usize.html">usize</a>&gt;</code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../../src/rustpi_io/serial.rs.html#310-323' title='goto source code'>[src]</a></span></h4>
+<div class='docblock'><p>Calls write in the spi device if <a href="./enum.ComMode.html"><code>ComMode</code></a> is <a href="./enum.ComMode.html#variant.HalfDuplex"><code>ComMode::HalfDuplex</code></a>.</p>
+
+<p>Does a full duplex transfer if <a href="./enum.ComMode.html"><code>ComMode</code></a> is not <a href="./enum.ComMode.html#variant.HalfDuplex"><code>ComMode::HalfDuplex</code></a> and buffers the received bytes internally.
+The buffer is allowed to grow above its capacity. Call <code>consume</code> to drop already received bytes or <code>read</code> them. To deallocate buffer space call <code>try_shrink_to</code> (after consuming already received data).</p>
+</div><h4 id='method.flush' class="method"><span id='flush.v' class='invisible'><code>fn <a href='https://doc.rust-lang.org/nightly/std/io/trait.Write.html#tymethod.flush' class='fnname'>flush</a>(&amp;mut self) -&gt; <a class="type" href="https://doc.rust-lang.org/nightly/std/io/error/type.Result.html" title="type std::io::error::Result">Result</a>&lt;<a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.tuple.html">()</a>&gt;</code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../../src/rustpi_io/serial.rs.html#332-338' title='goto source code'>[src]</a></span></h4>
+<div class='docblock'><p>Does nothing if <a href="./enum.ComMode.html"><code>ComMode</code></a> is not <a href="./enum.ComMode.html#variant.HalfDuplex"><code>ComMode::HalfDuplex</code></a>.</p>
+
+<p>Flushes the spi device if <a href="./enum.ComMode.html"><code>ComMode</code></a> is <a href="./enum.ComMode.html#variant.HalfDuplex"><code>ComMode::HalfDuplex</code></a>.</p>
+</div><h4 id='method.write_all' class="method"><span id='write_all.v' class='invisible'><code>fn <a href='https://doc.rust-lang.org/nightly/std/io/trait.Write.html#method.write_all' class='fnname'>write_all</a>(&amp;mut self, buf: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.slice.html">&amp;[</a><a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.u8.html">u8</a><a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.slice.html">]</a>) -&gt; <a class="enum" href="https://doc.rust-lang.org/nightly/core/result/enum.Result.html" title="enum core::result::Result">Result</a>&lt;<a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.tuple.html">()</a>, <a class="struct" href="https://doc.rust-lang.org/nightly/std/io/error/struct.Error.html" title="struct std::io::error::Error">Error</a>&gt;</code></span><span class='out-of-band'><div class='ghost'></div><div class='since' title='Stable since Rust version 1.0.0'>1.0.0</div><a class='srclink' href='https://doc.rust-lang.org/nightly/src/std/io/mod.rs.html#1070-1081' title='goto source code'>[src]</a></span></h4>
+<div class='docblock'><p>Attempts to write an entire buffer into this write. <a href="https://doc.rust-lang.org/nightly/std/io/trait.Write.html#method.write_all">Read more</a></p>
+</div><h4 id='method.write_fmt' class="method"><span id='write_fmt.v' class='invisible'><code>fn <a href='https://doc.rust-lang.org/nightly/std/io/trait.Write.html#method.write_fmt' class='fnname'>write_fmt</a>(&amp;mut self, fmt: <a class="struct" href="https://doc.rust-lang.org/nightly/core/fmt/struct.Arguments.html" title="struct core::fmt::Arguments">Arguments</a>) -&gt; <a class="enum" href="https://doc.rust-lang.org/nightly/core/result/enum.Result.html" title="enum core::result::Result">Result</a>&lt;<a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.tuple.html">()</a>, <a class="struct" href="https://doc.rust-lang.org/nightly/std/io/error/struct.Error.html" title="struct std::io::error::Error">Error</a>&gt;</code></span><span class='out-of-band'><div class='ghost'></div><div class='since' title='Stable since Rust version 1.0.0'>1.0.0</div><a class='srclink' href='https://doc.rust-lang.org/nightly/src/std/io/mod.rs.html#1122-1154' title='goto source code'>[src]</a></span></h4>
+<div class='docblock'><p>Writes a formatted string into this writer, returning any error encountered. <a href="https://doc.rust-lang.org/nightly/std/io/trait.Write.html#method.write_fmt">Read more</a></p>
+</div><h4 id='method.by_ref-1' class="method"><span id='by_ref.v-1' class='invisible'><code>fn <a href='https://doc.rust-lang.org/nightly/std/io/trait.Write.html#method.by_ref' class='fnname'>by_ref</a>(&amp;mut self) -&gt; <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.reference.html">&amp;mut </a>Self</code></span><span class='out-of-band'><div class='ghost'></div><div class='since' title='Stable since Rust version 1.0.0'>1.0.0</div><a class='srclink' href='https://doc.rust-lang.org/nightly/src/std/io/mod.rs.html#1178' title='goto source code'>[src]</a></span></h4>
+<div class='docblock'><p>Creates a &quot;by reference&quot; adaptor for this instance of <code>Write</code>. <a href="https://doc.rust-lang.org/nightly/std/io/trait.Write.html#method.by_ref">Read more</a></p>
+</div></div></section>
+    <section id='search' class="content hidden"></section>
+
+    <section class="footer"></section>
+
+    <aside id="help" class="hidden">
+        <div>
+            <h1 class="hidden">Help</h1>
+
+            <div class="shortcuts">
+                <h2>Keyboard Shortcuts</h2>
+
+                <dl>
+                    <dt>?</dt>
+                    <dd>Show this help dialog</dd>
+                    <dt>S</dt>
+                    <dd>Focus the search field</dd>
+                    <dt>&larrb;</dt>
+                    <dd>Move up in search results</dd>
+                    <dt>&rarrb;</dt>
+                    <dd>Move down in search results</dd>
+                    <dt>&#9166;</dt>
+                    <dd>Go to active search result</dd>
+                    <dt>+</dt>
+                    <dd>Collapse/expand all sections</dd>
+                </dl>
+            </div>
+
+            <div class="infos">
+                <h2>Search Tricks</h2>
+
+                <p>
+                    Prefix searches with a type followed by a colon (e.g.
+                    <code>fn:</code>) to restrict the search to a given type.
+                </p>
+
+                <p>
+                    Accepted types are: <code>fn</code>, <code>mod</code>,
+                    <code>struct</code>, <code>enum</code>,
+                    <code>trait</code>, <code>type</code>, <code>macro</code>,
+                    and <code>const</code>.
+                </p>
+
+                <p>
+                    Search functions by type signature (e.g.
+                    <code>vec -> usize</code> or <code>* -> vec</code>)
+                </p>
+            </div>
+        </div>
+    </aside>
+
+    
+
+    <script>
+        window.rootPath = "../../";
+        window.currentCrate = "rustpi_io";
+    </script>
+    <script src="../../main.js"></script>
+    <script defer src="../../search-index.js"></script>
+</body>
+</html>

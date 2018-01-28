@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="generator" content="rustdoc">
+    <meta name="description" content="API documentation for the Rust `GPIO` struct in crate `rustpi_io`.">
+    <meta name="keywords" content="rust, rustlang, rust-lang, GPIO">
+
+    <title>rustpi_io::gpio::GPIO - Rust</title>
+
+    <link rel="stylesheet" type="text/css" href="../../normalize.css">
+    <link rel="stylesheet" type="text/css" href="../../rustdoc.css">
+    <link rel="stylesheet" type="text/css" href="../../main.css">
+    
+
+    
+    
+</head>
+<body class="rustdoc struct">
+    <!--[if lte IE 8]>
+    <div class="warning">
+        This old browser is unsupported and will most likely display funky
+        things.
+    </div>
+    <![endif]-->
+
+    
+
+    <nav class="sidebar">
+        
+        <p class='location'>Struct GPIO</p><div class="block items"><ul><li><a href="#methods">Methods</a></li><li><a href="#implementations">Trait Implementations</a></li></ul></div><p class='location'><a href='../index.html'>rustpi_io</a>::<wbr><a href='index.html'>gpio</a></p><script>window.sidebarCurrent = {name: 'GPIO', ty: 'struct', relpath: ''};</script><script defer src="sidebar-items.js"></script>
+    </nav>
+
+    <nav class="sub">
+        <form class="search-form js-only">
+            <div class="search-container">
+                <input class="search-input" name="search"
+                       autocomplete="off"
+                       placeholder="Click or press ‘S’ to search, ‘?’ for more options…"
+                       type="search">
+            </div>
+        </form>
+    </nav>
+
+    <section id='main' class="content">
+<h1 class='fqn'><span class='in-band'>Struct <a href='../index.html'>rustpi_io</a>::<wbr><a href='index.html'>gpio</a>::<wbr><a class="struct" href=''>GPIO</a></span><span class='out-of-band'><span id='render-detail'>
+                   <a id="toggle-all-docs" href="javascript:void(0)" title="collapse all docs">
+                       [<span class='inner'>&#x2212;</span>]
+                   </a>
+               </span><a class='srclink' href='../../src/rustpi_io/gpio.rs.html#43-46' title='goto source code'>[src]</a></span></h1>
+<pre class='rust struct'>pub struct GPIO { /* fields omitted */ }</pre><div class='docblock'><p>A software representation for a GPIO pin of the raspberry pi.</p>
+</div>
+                    <h2 id='methods' class='small-section-header'>
+                      Methods<a href='#methods' class='anchor'></a>
+                    </h2>
+                <h3 id='impl' class='impl'><span class='in-band'><code>impl <a class="struct" href="../../rustpi_io/gpio/struct.GPIO.html" title="struct rustpi_io::gpio::GPIO">GPIO</a></code><a href='#impl' class='anchor'></a></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../../src/rustpi_io/gpio.rs.html#48-135' title='goto source code'>[src]</a></span></h3>
+<div class='impl-items'><h4 id='method.gpio_number' class="method"><span id='gpio_number.v' class='invisible'><code>pub fn <a href='#method.gpio_number' class='fnname'>gpio_number</a>(&amp;self) -&gt; <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.u8.html">u8</a></code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../../src/rustpi_io/gpio.rs.html#50-52' title='goto source code'>[src]</a></span></h4>
+<div class='docblock'><p>Returns the configured pin of the GPIO struct.</p>
+</div><h4 id='method.current_mode' class="method"><span id='current_mode.v' class='invisible'><code>pub fn <a href='#method.current_mode' class='fnname'>current_mode</a>(&amp;self) -&gt; <a class="enum" href="../../rustpi_io/gpio/enum.GPIOMode.html" title="enum rustpi_io::gpio::GPIOMode">GPIOMode</a></code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../../src/rustpi_io/gpio.rs.html#55-57' title='goto source code'>[src]</a></span></h4>
+<div class='docblock'><p>Returns the configured mode of the GPIO struct.</p>
+</div><h4 id='method.set_mode' class="method"><span id='set_mode.v' class='invisible'><code>pub fn <a href='#method.set_mode' class='fnname'>set_mode</a>(&amp;mut self, mode: <a class="enum" href="../../rustpi_io/gpio/enum.GPIOMode.html" title="enum rustpi_io::gpio::GPIOMode">GPIOMode</a>) -&gt; <a class="type" href="https://doc.rust-lang.org/nightly/std/io/error/type.Result.html" title="type std::io::error::Result">Result</a>&lt;<a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.reference.html">&amp;mut </a>Self&gt;</code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../../src/rustpi_io/gpio.rs.html#60-70' title='goto source code'>[src]</a></span></h4>
+<div class='docblock'><p>Changes the mode of the pin and writes the corresponding value to the fitting direction file</p>
+</div><h4 id='method.new' class="method"><span id='new.v' class='invisible'><code>pub fn <a href='#method.new' class='fnname'>new</a>(gpio: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.u8.html">u8</a>, mode: <a class="enum" href="../../rustpi_io/gpio/enum.GPIOMode.html" title="enum rustpi_io::gpio::GPIOMode">GPIOMode</a>) -&gt; <a class="type" href="https://doc.rust-lang.org/nightly/std/io/error/type.Result.html" title="type std::io::error::Result">Result</a>&lt;Self&gt;</code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../../src/rustpi_io/gpio.rs.html#75-94' title='goto source code'>[src]</a></span></h4>
+<div class='docblock'><p>Initializes the gpio. Exports the pin with the /sys/class/gpio/export file
+and calls the set_mode() function with the given mode.
+Returns an Error if the gpio was already exported earlier (inside or outside of the application)</p>
+</div><h4 id='method.value' class="method"><span id='value.v' class='invisible'><code>pub fn <a href='#method.value' class='fnname'>value</a>(&amp;self) -&gt; <a class="type" href="https://doc.rust-lang.org/nightly/std/io/error/type.Result.html" title="type std::io::error::Result">Result</a>&lt;<a class="enum" href="../../rustpi_io/gpio/enum.GPIOData.html" title="enum rustpi_io::gpio::GPIOData">GPIOData</a>&gt;</code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../../src/rustpi_io/gpio.rs.html#98-114' title='goto source code'>[src]</a></span></h4>
+<div class='docblock'><p>Reads the current value of the pin in both Read and Write mode.
+Returns an Error if a value other than &quot;1&quot; or &quot;0&quot; is read</p>
+</div><h4 id='method.set' class="method"><span id='set.v' class='invisible'><code>pub fn <a href='#method.set' class='fnname'>set</a>(&amp;self, data: <a class="enum" href="../../rustpi_io/gpio/enum.GPIOData.html" title="enum rustpi_io::gpio::GPIOData">GPIOData</a>) -&gt; <a class="type" href="https://doc.rust-lang.org/nightly/std/io/error/type.Result.html" title="type std::io::error::Result">Result</a>&lt;<a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.tuple.html">()</a>&gt;</code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../../src/rustpi_io/gpio.rs.html#118-134' title='goto source code'>[src]</a></span></h4>
+<div class='docblock'><p>Sets the value of the gpio to HIGH or LOW
+Returns an Error if the GPIO::Mode is not Write</p>
+</div></div>
+            <h2 id='implementations' class='small-section-header'>
+              Trait Implementations<a href='#implementations' class='anchor'></a>
+            </h2>
+        <h3 id='impl-Drop' class='impl'><span class='in-band'><code>impl <a class="trait" href="https://doc.rust-lang.org/nightly/core/ops/drop/trait.Drop.html" title="trait core::ops::drop::Drop">Drop</a> for <a class="struct" href="../../rustpi_io/gpio/struct.GPIO.html" title="struct rustpi_io::gpio::GPIO">GPIO</a></code><a href='#impl-Drop' class='anchor'></a></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../../src/rustpi_io/gpio.rs.html#138-152' title='goto source code'>[src]</a></span></h3>
+<div class='docblock'><p>Closes the gpio and write its pin number into /sys/class/gpio/unexport</p>
+</div><div class='impl-items'><h4 id='method.drop' class="method"><span id='drop.v' class='invisible'><code>fn <a href='https://doc.rust-lang.org/nightly/core/ops/drop/trait.Drop.html#tymethod.drop' class='fnname'>drop</a>(&amp;mut self)</code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../../src/rustpi_io/gpio.rs.html#139-151' title='goto source code'>[src]</a></span></h4>
+<div class='docblock'><p>Executes the destructor for this type. <a href="https://doc.rust-lang.org/nightly/core/ops/drop/trait.Drop.html#tymethod.drop">Read more</a></p>
+</div></div></section>
+    <section id='search' class="content hidden"></section>
+
+    <section class="footer"></section>
+
+    <aside id="help" class="hidden">
+        <div>
+            <h1 class="hidden">Help</h1>
+
+            <div class="shortcuts">
+                <h2>Keyboard Shortcuts</h2>
+
+                <dl>
+                    <dt>?</dt>
+                    <dd>Show this help dialog</dd>
+                    <dt>S</dt>
+                    <dd>Focus the search field</dd>
+                    <dt>&larrb;</dt>
+                    <dd>Move up in search results</dd>
+                    <dt>&rarrb;</dt>
+                    <dd>Move down in search results</dd>
+                    <dt>&#9166;</dt>
+                    <dd>Go to active search result</dd>
+                    <dt>+</dt>
+                    <dd>Collapse/expand all sections</dd>
+                </dl>
+            </div>
+
+            <div class="infos">
+                <h2>Search Tricks</h2>
+
+                <p>
+                    Prefix searches with a type followed by a colon (e.g.
+                    <code>fn:</code>) to restrict the search to a given type.
+                </p>
+
+                <p>
+                    Accepted types are: <code>fn</code>, <code>mod</code>,
+                    <code>struct</code>, <code>enum</code>,
+                    <code>trait</code>, <code>type</code>, <code>macro</code>,
+                    and <code>const</code>.
+                </p>
+
+                <p>
+                    Search functions by type signature (e.g.
+                    <code>vec -> usize</code> or <code>* -> vec</code>)
+                </p>
+            </div>
+        </div>
+    </aside>
+
+    
+
+    <script>
+        window.rootPath = "../../";
+        window.currentCrate = "rustpi_io";
+    </script>
+    <script src="../../main.js"></script>
+    <script defer src="../../search-index.js"></script>
+</body>
+</html>
