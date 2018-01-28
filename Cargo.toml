@@ -2,7 +2,7 @@
 name = "rustpi_io"
 version = "0.1.0"
 authors = ["Tom Meyer<tom.meyer89@gmail.com>"]
-license = "GNU General Public License v3"
+license = "AGPL-3.0-or-later"
 description = "RustpiIO is a library to read and write to the SPI bus and the GPIO pins of a Raspberry Pi."
 keywords = ["raspberry", "pi", "gpio", "spi"]
 repository = "https://github.com/Skasselbard/rustpiIO"
