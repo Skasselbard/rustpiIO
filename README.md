@@ -5,6 +5,9 @@ It uses the system interface under /sys/class/gpio/ provided by the linux OS for
 
 There is also an interface to read out the [revision codes](https://www.raspberrypi.org/documentation/hardware/raspberrypi/revision-codes/README.md) in /proc/cpuinfo for programmatic use.
 
+# Documentation
+You can find the documentation [here](https://skasselbard.github.io/rustpiIO/).
+
 # Installation
 To compile a raspberry pi program you need to prepare a cross compiler for rust
 (for the older pi processors try `*gnueabi` instead of `*gnueabihf`):  

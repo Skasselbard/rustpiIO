@@ -1,12 +1,13 @@
 [package]
 name = "rustpi_io"
 version = "0.1.0"
-authors = ["Tom Meyer<tom.meyer89@gmail.com"]
-include = ["src/*"]
+authors = ["Tom Meyer<tom.meyer89@gmail.com>"]
 license = "GNU General Public License v3"
+description = ""
 keywords = ["raspberry", "pi", "gpio", "serial", "connection", "spi", "serial peripheral interface bus", "raspbian"]
 repository = "https://github.com/Skasselbard/rustpiIO"
-exclude = ["src/bin/*"]
+exclude = ["src/bin/*", ".cargo/*", ".vscode/*"]
+documentation = "https://skasselbard.github.io/rustpiIO/"
 
 [dependencies]
 spidev = "0.3.0"
