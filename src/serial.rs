@@ -86,10 +86,22 @@ pub enum SpiMode {
     Mode3,
 }
 
+impl Default for SpiMode {
+    fn default() -> Self {
+        SpiMode::Mode0
+    }
+}
+
 #[derive(PartialEq)]
 pub enum ComMode {
     FullDuplex,
     HalfDuplex,
+}
+
+impl Default for ComMode {
+    fn default() -> Self {
+        ComMode::FullDuplex
+    }
 }
 
 fn spi_open_error() -> Error {
@@ -111,6 +123,16 @@ impl SerialPi {
         speed: Speed,
         spi_mode: SpiMode,
         communication_mode: ComMode,
+    ) -> io::Result<SerialPi> {
+        SerialPi::with_capacity(device, speed, spi_mode, communication_mode, 1000)
+    }
+
+    pub fn with_capacity(
+        device: Device,
+        speed: Speed,
+        spi_mode: SpiMode,
+        communication_mode: ComMode,
+        buffer_capacity: usize,
     ) -> io::Result<SerialPi> {
         //TODO: Check that correponding GPIOS are free
         let mut spi = match device {
@@ -138,7 +160,7 @@ impl SerialPi {
         Ok(SerialPi {
             device: spi,
             com_mode: communication_mode,
-            read_buffer: Vec::with_capacity(100),
+            read_buffer: Vec::with_capacity(buffer_capacity),
         })
     }
 }
