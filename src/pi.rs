@@ -1,6 +1,6 @@
 // This file is part of RustpiIO.
 //
-// Copyright 2017
+// Copyright 2018
 //
 // Contributors: Tom Meyer
 //

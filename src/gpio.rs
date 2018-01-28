@@ -1,3 +1,22 @@
+// This file is part of RustpiIO.
+//
+// Copyright 2018
+//
+// Contributors: Tom Meyer
+//
+// RustpiIO is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+//
+// RustpiIO is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with RustpiIO.  If not, see <http://www.gnu.org/licenses/>
+
 use std::fs::OpenOptions;
 use std::io::prelude::*;
 use std::io::Result;
@@ -20,7 +39,7 @@ pub enum GPIOData {
     High = 1,
 }
 
-///
+/// A software representation for a GPIO pin of the raspberry pi.
 pub struct GPIO {
     pin: u8,
     mode: GPIOMode,
@@ -37,7 +56,7 @@ impl GPIO {
         self.mode
     }
 
-    /// Changes the mode of the pin and writes the according value to the fitting direction file
+    /// Changes the mode of the pin and writes the corresponding value to the fitting direction file
     pub fn set_mode(&mut self, mode: GPIOMode) -> Result<&mut Self> {
         let mut direction = OpenOptions::new()
             .write(true)
@@ -50,9 +69,9 @@ impl GPIO {
         Ok(self)
     }
 
-    /// Initializes the gpio. Exports the pin with the /sys/class/gpio/export file.
+    /// Initializes the gpio. Exports the pin with the /sys/class/gpio/export file
     /// and calls the set_mode() function with the given mode.
-    /// Returns an Error if the gpio was already exported earlier (inside or outside of the program)
+    /// Returns an Error if the gpio was already exported earlier (inside or outside of the application)
     pub fn new(gpio: u8, mode: GPIOMode) -> Result<Self> {
         if Path::new(&format!("{}gpio{}/", GPIO_PATH, gpio)).exists() {
             return Err(Error::new(
@@ -74,7 +93,7 @@ impl GPIO {
         Ok(result)
     }
 
-    /// Reads the current of the pin in both Read and Write mode
+    /// Reads the current value of the pin in both Read and Write mode.
     /// Returns an Error if a value other than "1" or "0" is read
     pub fn value(&self) -> Result<GPIOData> {
         let mut value = try!(
