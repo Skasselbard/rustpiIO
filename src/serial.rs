@@ -71,7 +71,6 @@ pub enum Speed {
     Hz7629,
 }
 
-
 impl Speed {
     /// Converts the `Speed` variants into an integer representing the Hz value
     fn to_int(&self) -> u32 {
@@ -292,7 +291,7 @@ impl BufRead for SerialPi {
      */
     fn consume(&mut self, amt: usize) {
         if self.com_mode == ComMode::FullDuplex {
-            self.read_buffer.drain(0..(amt - 1));
+            self.read_buffer.drain(0..(amt));
         }
     }
 }
