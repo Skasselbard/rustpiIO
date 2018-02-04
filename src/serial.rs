@@ -243,11 +243,11 @@ impl Read for SerialPi {
      * Fills buf with the bytes from the internal buffer. If buf.len() is greater then the buffered byte count, the serial device is read until buf is filled.
      */
     fn read(&mut self, buf: &mut [u8]) -> io::Result<usize> {
-        let mut buffer_read_count = try!(self.read_buffer.as_slice().read(buf));
-        self.read_buffer = self.read_buffer.split_off(buffer_read_count);
+        let mut buffer_read_count = self.read_buffer.as_slice().read(buf)?;
+        self.read_buffer.drain(0..buffer_read_count);
         if buffer_read_count < buf.len() {
             let (_, rest_buffer) = buf.split_at_mut(buffer_read_count);
-            buffer_read_count = buffer_read_count + try!(self.device.read(rest_buffer));
+            buffer_read_count = buffer_read_count + self.device.read(rest_buffer)?;
         }
         Ok(buffer_read_count)
     }
