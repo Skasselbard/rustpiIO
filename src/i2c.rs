@@ -20,7 +20,7 @@
 use std;
 use i2c_linux::{I2c, Message, ReadFlags, WriteFlags};
 use internal_i2c;
-use internal_i2c::{Address, BlockTransfer, BulkTransfer, Master, ReadWrite};
+pub use internal_i2c::{Address, BlockTransfer, BulkTransfer, Master, ReadWrite};
 
 pub struct I2CPi {
     inner: I2c<std::fs::File>,
