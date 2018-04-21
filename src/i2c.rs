@@ -18,9 +18,10 @@
 // along with RustpiIO.  If not, see <http://www.gnu.org/licenses/>
 
 use std;
-use i2c_linux::{I2c, Message, ReadFlags, WriteFlags};
-use internal_i2c;
-pub use internal_i2c::{Address, BlockTransfer, BulkTransfer, Master, ReadWrite};
+use i2c_linux::I2c;
+use i2c_linux;
+pub use internal_i2c::{Address, BlockTransfer, BulkTransfer, Master, Message, ReadFlags,
+                       ReadWrite, WriteFlags};
 
 pub struct I2CPi {
     inner: I2c<std::fs::File>,
@@ -33,6 +34,9 @@ impl I2CPi {
             Err(_) => I2c::from_path("/dev/i2c-1")?,
         };
         Ok(I2CPi { inner: i2c })
+    }
+    pub fn i2c_transfer(&mut self, messages: &mut [i2c_linux::Message]) -> Result<(), <I2CPi as Master>::Error> {
+        self.inner.i2c_transfer(messages)
     }
 }
 
@@ -69,17 +73,3 @@ impl std::io::Write for I2CPi {
         self.inner.flush()
     }
 }
-
-// impl BulkTransfer for I2CPi{
-//     fn i2c_transfer_support(
-//         &mut self
-//     ) -> Result<(internal_i2c::ReadFlags, internal_i2c::WriteFlags), Self::Error>{
-//         self.inner.i2c_transfer_support()
-//     }
-//     fn i2c_transfer(
-//         &mut self,
-//         messages: &mut [internal_i2c::Message]
-//     ) -> Result<(), Self::Error>{
-//         self.inner.i2c_transfer(messages)
-//     }
-// }
