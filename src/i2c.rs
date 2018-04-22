@@ -28,7 +28,7 @@ pub struct I2CPi {
 }
 
 impl I2CPi {
-    pub fn new() -> std::io::Result<I2CPi> {
+    pub fn new() -> std::io::Result<Self> {
         let i2c = match I2c::from_path("/dev/i2c-0") {
             Ok(device) => device,
             Err(_) => I2c::from_path("/dev/i2c-1")?,
@@ -88,12 +88,12 @@ pub struct SMBusPi {
 }
 
 impl SMBusPi {
-    pub fn new() -> std::io::Result<I2CPi> {
+    pub fn new() -> std::io::Result<Self> {
         let i2c = match I2c::from_path("/dev/i2c-0") {
             Ok(device) => device,
             Err(_) => I2c::from_path("/dev/i2c-1")?,
         };
-        Ok(I2CPi { inner: i2c })
+        Ok(SMBusPi { inner: i2c })
     }
 
     pub fn slave_address(&mut self, addr: u16, tenbit: bool) -> std::io::Result<()>{
