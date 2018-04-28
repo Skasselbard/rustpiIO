@@ -11,5 +11,5 @@ documentation = "https://skasselbard.github.io/rustpiIO/"
 
 [dependencies]
 spidev = "0.3.0"
-i2c = "0.1.0"
-i2c-linux = "0.1.1"
+#i2c-linux = "0.1.1"
+i2cdev = "0.4.0"

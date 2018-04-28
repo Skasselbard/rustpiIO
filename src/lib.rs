@@ -77,9 +77,9 @@ Build for the Raspberry with `cargo build --target=arm-unknown-linux-gnueabihf`
 ```
 */
 
-extern crate i2c as internal_i2c;
-extern crate i2c_linux;
+//extern crate i2c_linux;
 extern crate spidev;
+extern crate i2cdev;
 
 mod globals;
 pub mod gpio;
