@@ -27,13 +27,13 @@ use std::fmt;
 
 use globals::GPIO_PATH;
 
-#[derive(Debug, Clone, Copy, PartialEq)]
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub enum GPIOMode {
     Read,
     Write,
 }
 
-#[derive(Debug, Clone, Copy)]
+#[derive(Debug, Clone, Copy, Eq, PartialEq)]
 pub enum GPIOData {
     Low = 0,
     High = 1,
