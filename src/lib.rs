@@ -45,14 +45,14 @@ Build for the Raspberry with `cargo build --target=arm-unknown-linux-gnueabihf`
 
 ```
  extern crate rustpi_io;
- use rustpi_io::*;
+ use rustpi_io::gpio::{GPIO, GPIOData, GPIOMode};
 
  fn main() {
-     let gpio2 = match GPIO::init(2, GPIOMode::Write){
+     let gpio2 = match GPIO::new(2, GPIOMode::Write){
      Ok(result) => result,
      Err(e) => panic!("{:?}", e),
      };
-     let gpio3 = match GPIO::init(3, GPIOMode::Read){
+     let gpio3 = match GPIO::new(3, GPIOMode::Read){
          Ok(result) => result,
          Err(e) => panic!("{:?}", e),
      };
