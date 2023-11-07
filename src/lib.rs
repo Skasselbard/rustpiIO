@@ -57,7 +57,7 @@ fn main() {
         Err(e) => panic!("{:?}", e),
     };
     let mut value: u8 = 1;
-    for n in 1..100 {
+    for _ in 1..100 {
         value = 1 - value;
         let data = match value {
             0 => GPIOData::Low,
