@@ -99,19 +99,13 @@ The most common spi modes regulating the clock phase and polarity.
 Mode 0 seems to be the most used one and is set as default.  
 See https://en.wikipedia.org/wiki/Serial_Peripheral_Interface_Bus#Clock_polarity_and_phase for an explanation 
 */
-#[derive(PartialEq)]
+#[derive(PartialEq, Default)]
 pub enum SpiMode {
+    #[default]
     Mode0,
     Mode1,
     Mode2,
     Mode3,
-}
-
-impl Default for SpiMode {
-    //* SpiMode::Mode0 */
-    fn default() -> Self {
-        SpiMode::Mode0
-    }
 }
 
 #[derive(PartialEq)]
@@ -247,7 +241,7 @@ impl Read for SerialPi {
         self.read_buffer.drain(0..buffer_read_count);
         if buffer_read_count < buf.len() {
             let (_, rest_buffer) = buf.split_at_mut(buffer_read_count);
-            buffer_read_count = buffer_read_count + self.device.read(rest_buffer)?;
+            buffer_read_count += self.device.read(rest_buffer)?;
         }
         Ok(buffer_read_count)
     }
@@ -310,8 +304,7 @@ impl Write for SerialPi {
         if self.com_mode == ComMode::HalfDuplex {
             self.device.write(buf)
         } else {
-            let mut read_data: Vec<u8> = Vec::with_capacity(buf.len());
-            read_data.resize(buf.len(), 0 as u8);
+            let mut read_data: Vec<u8> = vec![0_u8; buf.len()];
             {
                 let mut transfer = SpidevTransfer::read_write(buf, read_data.as_mut_slice());
                 self.device.transfer(&mut transfer)?;

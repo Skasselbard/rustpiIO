@@ -87,7 +87,7 @@ impl GPIO {
         }
         let mut result = GPIO {
             pin: gpio,
-            mode: mode,
+            mode,
         };
         result.set_mode(mode)?;
         Ok(result)
@@ -139,9 +139,8 @@ impl Drop for GPIO {
             .write(true)
             .open(format!("{}unexport", GPIO_PATH))
         {
-            match unexport.write_all(format!("{}", self.pin).as_bytes()) {
-                Err(why) => panic!("couldn't close gpio {}: {}", self.pin, why),
-                Ok(_) => {}
+            if let Err(why) = unexport.write_all(format!("{}", self.pin).as_bytes()) {
+                panic!("couldn't close gpio {}: {}", self.pin, why)
             }
         } else {
             panic!("file error: {}")
