@@ -17,11 +17,13 @@
 // You should have received a copy of the GNU General Public License
 // along with RustpiIO.  If not, see <http://www.gnu.org/licenses/>
 
-use std::io;
-use std::io::{Error, ErrorKind};
-use spidev::{SPI_MODE_0, SPI_MODE_1, SPI_MODE_2, SPI_MODE_3, Spidev, SpidevOptions, SpidevTransfer};
 use globals::{SPI_PATH0, SPI_PATH1};
+use spidev::{
+    Spidev, SpidevOptions, SpidevTransfer, SPI_MODE_0, SPI_MODE_1, SPI_MODE_2, SPI_MODE_3,
+};
+use std::io;
 use std::io::{BufRead, Read, Write};
+use std::io::{Error, ErrorKind};
 
 /**
  * Correspond to the SPI Chip Enable Pins on the raspberry pi.
@@ -32,25 +34,25 @@ pub enum Device {
     CE1 = 1,
 }
 
-/** 
- From https://www.raspberrypi.org/documentation/hardware/raspberrypi/spi/README.md#driver  
- Possible Speeds:  
-    125.0 MHz  
-    62.5 MHz  
-    31.2 MHz  
-    15.6 MHz  
-    7.8 MHz  
-    3.9 MHz  
-    1953 kHz  
-    976 kHz  
-    488 kHz  
-    244 kHz  
-    122 kHz  
-    61 kHz  
-    30.5 kHz  
-    15.2 kHz  
-    7629 Hz  
- */
+/**
+From https://www.raspberrypi.org/documentation/hardware/raspberrypi/spi/README.md#driver
+Possible Speeds:
+   125.0 MHz
+   62.5 MHz
+   31.2 MHz
+   15.6 MHz
+   7.8 MHz
+   3.9 MHz
+   1953 kHz
+   976 kHz
+   488 kHz
+   244 kHz
+   122 kHz
+   61 kHz
+   30.5 kHz
+   15.2 kHz
+   7629 Hz
+*/
 #[derive(Debug, PartialEq)]
 #[allow(non_camel_case_types)]
 pub enum Speed {
@@ -95,23 +97,17 @@ impl Speed {
 }
 
 /**
-The most common spi modes regulating the clock phase and polarity.  
-Mode 0 seems to be the most used one and is set as default.  
-See https://en.wikipedia.org/wiki/Serial_Peripheral_Interface_Bus#Clock_polarity_and_phase for an explanation 
+The most common spi modes regulating the clock phase and polarity.
+Mode 0 seems to be the most used one and is set as default.
+See https://en.wikipedia.org/wiki/Serial_Peripheral_Interface_Bus#Clock_polarity_and_phase for an explanation
 */
-#[derive(PartialEq)]
+#[derive(PartialEq, Default)]
 pub enum SpiMode {
+    #[default]
     Mode0,
     Mode1,
     Mode2,
     Mode3,
-}
-
-impl Default for SpiMode {
-    //* SpiMode::Mode0 */
-    fn default() -> Self {
-        SpiMode::Mode0
-    }
 }
 
 #[derive(PartialEq)]
@@ -208,7 +204,7 @@ impl SerialPi {
             })
             .lsb_first(false)
             .build();
-        try!(spi.configure(&options));
+        spi.configure(&options)?;
         Ok(SerialPi {
             device: spi,
             com_mode: communication_mode,
@@ -247,7 +243,7 @@ impl Read for SerialPi {
         self.read_buffer.drain(0..buffer_read_count);
         if buffer_read_count < buf.len() {
             let (_, rest_buffer) = buf.split_at_mut(buffer_read_count);
-            buffer_read_count = buffer_read_count + self.device.read(rest_buffer)?;
+            buffer_read_count += self.device.read(rest_buffer)?;
         }
         Ok(buffer_read_count)
     }
@@ -275,7 +271,7 @@ impl BufRead for SerialPi {
                         self.read_buffer.as_mut_slice().split_at_mut(buffer_length);
                     rest_buffer
                 };
-                try!(self.device.read(rest_buffer))
+                self.device.read(rest_buffer)?
             };
             self.read_buffer.truncate(buffer_length + bytes_read);
         }
@@ -310,11 +306,10 @@ impl Write for SerialPi {
         if self.com_mode == ComMode::HalfDuplex {
             self.device.write(buf)
         } else {
-            let mut read_data: Vec<u8> = Vec::with_capacity(buf.len());
-            read_data.resize(buf.len(), 0 as u8);
+            let mut read_data: Vec<u8> = vec![0_u8; buf.len()];
             {
                 let mut transfer = SpidevTransfer::read_write(buf, read_data.as_mut_slice());
-                try!(self.device.transfer(&mut transfer));
+                self.device.transfer(&mut transfer)?;
             }
             self.read_buffer.append(&mut read_data);
             Ok(buf.len())

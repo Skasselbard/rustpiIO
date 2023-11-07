@@ -17,13 +17,13 @@
 // You should have received a copy of the GNU General Public License
 // along with RustpiIO.  If not, see <http://www.gnu.org/licenses/>
 
+use std::fmt;
 use std::fs::OpenOptions;
 use std::io::prelude::*;
-use std::io::Result;
-use std::io::ErrorKind;
 use std::io::Error;
+use std::io::ErrorKind;
+use std::io::Result;
 use std::path::Path;
-use std::fmt;
 
 use globals::GPIO_PATH;
 
@@ -62,8 +62,8 @@ impl GPIO {
             .write(true)
             .open(format!("{}gpio{}/direction", GPIO_PATH, self.pin))?;
         match mode {
-            GPIOMode::Read => try!(direction.write_all("in".as_bytes())),
-            GPIOMode::Write => try!(direction.write_all("out".as_bytes())),
+            GPIOMode::Read => direction.write_all("in".as_bytes())?,
+            GPIOMode::Write => direction.write_all("out".as_bytes())?,
         };
         self.mode = mode;
         Ok(self)
@@ -85,10 +85,7 @@ impl GPIO {
                 .open(format!("{}export", GPIO_PATH))?;
             export.write_all(format!("{}", gpio).as_bytes())?;
         }
-        let mut result = GPIO {
-            pin: gpio,
-            mode: mode,
-        };
+        let mut result = GPIO { pin: gpio, mode };
         result.set_mode(mode)?;
         Ok(result)
     }
@@ -96,13 +93,11 @@ impl GPIO {
     /// Reads the current value of the pin in both Read and Write mode.
     /// Returns an Error if a value other than "1" or "0" is read
     pub fn value(&self) -> Result<GPIOData> {
-        let mut value = try!(
-            OpenOptions::new()
-                .read(true)
-                .open(format!("{}gpio{}/value", GPIO_PATH, self.pin))
-        );
+        let mut value = OpenOptions::new()
+            .read(true)
+            .open(format!("{}gpio{}/value", GPIO_PATH, self.pin))?;
         let mut buffer = vec![];
-        try!(value.read_to_end(&mut buffer));
+        value.read_to_end(&mut buffer)?;
         match buffer[0] as char {
             '0' => Ok(GPIOData::Low),
             '1' => Ok(GPIOData::High),
@@ -129,7 +124,7 @@ impl GPIO {
         let mut direction = OpenOptions::new()
             .write(true)
             .open(format!("{}gpio{}/value", GPIO_PATH, self.pin))?;
-        try!(direction.write_all(buffer.as_bytes()));
+        direction.write_all(buffer.as_bytes())?;
         Ok(())
     }
 }
@@ -137,16 +132,16 @@ impl GPIO {
 /// Closes the gpio and write its pin number into /sys/class/gpio/unexport
 impl Drop for GPIO {
     fn drop(&mut self) {
-        if let Ok(mut unexport) = OpenOptions::new()
+        match OpenOptions::new()
             .write(true)
             .open(format!("{}unexport", GPIO_PATH))
         {
-            match unexport.write_all(format!("{}", self.pin).as_bytes()) {
-                Err(why) => panic!("couldn't close gpio {}: {}", self.pin, why),
-                Ok(_) => {}
+            Ok(mut unexport) => {
+                if let Err(why) = unexport.write_all(format!("{}", self.pin).as_bytes()) {
+                    panic!("couldn't close gpio {}: {}", self.pin, why)
+                }
             }
-        } else {
-            panic!("file error: {}")
+            Err(why) => panic!("file error: {}", why),
         }
     }
 }
