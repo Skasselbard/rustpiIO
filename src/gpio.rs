@@ -62,8 +62,8 @@ impl GPIO {
             .write(true)
             .open(format!("{}gpio{}/direction", GPIO_PATH, self.pin))?;
         match mode {
-            GPIOMode::Read => try!(direction.write_all("in".as_bytes())),
-            GPIOMode::Write => try!(direction.write_all("out".as_bytes())),
+            GPIOMode::Read => direction.write_all("in".as_bytes())?,
+            GPIOMode::Write => direction.write_all("out".as_bytes())?,
         };
         self.mode = mode;
         Ok(self)
@@ -96,13 +96,11 @@ impl GPIO {
     /// Reads the current value of the pin in both Read and Write mode.
     /// Returns an Error if a value other than "1" or "0" is read
     pub fn value(&self) -> Result<GPIOData> {
-        let mut value = try!(
-            OpenOptions::new()
-                .read(true)
-                .open(format!("{}gpio{}/value", GPIO_PATH, self.pin))
-        );
+        let mut value = OpenOptions::new()
+            .read(true)
+            .open(format!("{}gpio{}/value", GPIO_PATH, self.pin))?;
         let mut buffer = vec![];
-        try!(value.read_to_end(&mut buffer));
+        value.read_to_end(&mut buffer)?;
         match buffer[0] as char {
             '0' => Ok(GPIOData::Low),
             '1' => Ok(GPIOData::High),
@@ -129,7 +127,7 @@ impl GPIO {
         let mut direction = OpenOptions::new()
             .write(true)
             .open(format!("{}gpio{}/value", GPIO_PATH, self.pin))?;
-        try!(direction.write_all(buffer.as_bytes()));
+        direction.write_all(buffer.as_bytes())?;
         Ok(())
     }
 }

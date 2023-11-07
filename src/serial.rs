@@ -208,7 +208,7 @@ impl SerialPi {
             })
             .lsb_first(false)
             .build();
-        try!(spi.configure(&options));
+        spi.configure(&options)?;
         Ok(SerialPi {
             device: spi,
             com_mode: communication_mode,
@@ -275,7 +275,7 @@ impl BufRead for SerialPi {
                         self.read_buffer.as_mut_slice().split_at_mut(buffer_length);
                     rest_buffer
                 };
-                try!(self.device.read(rest_buffer))
+                self.device.read(rest_buffer)?
             };
             self.read_buffer.truncate(buffer_length + bytes_read);
         }
@@ -314,7 +314,7 @@ impl Write for SerialPi {
             read_data.resize(buf.len(), 0 as u8);
             {
                 let mut transfer = SpidevTransfer::read_write(buf, read_data.as_mut_slice());
-                try!(self.device.transfer(&mut transfer));
+                self.device.transfer(&mut transfer)?;
             }
             self.read_buffer.append(&mut read_data);
             Ok(buf.len())
