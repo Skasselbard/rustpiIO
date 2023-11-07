@@ -17,13 +17,13 @@
 // You should have received a copy of the GNU General Public License
 // along with RustpiIO.  If not, see <http://www.gnu.org/licenses/>
 
+use std::fmt;
 use std::fs::OpenOptions;
 use std::io::prelude::*;
-use std::io::Result;
-use std::io::ErrorKind;
 use std::io::Error;
+use std::io::ErrorKind;
+use std::io::Result;
 use std::path::Path;
-use std::fmt;
 
 use globals::GPIO_PATH;
 
@@ -85,10 +85,7 @@ impl GPIO {
                 .open(format!("{}export", GPIO_PATH))?;
             export.write_all(format!("{}", gpio).as_bytes())?;
         }
-        let mut result = GPIO {
-            pin: gpio,
-            mode,
-        };
+        let mut result = GPIO { pin: gpio, mode };
         result.set_mode(mode)?;
         Ok(result)
     }

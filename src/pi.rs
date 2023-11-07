@@ -21,13 +21,13 @@
 //! Based on https://www.raspberrypi.org/documentation/hardware/raspberrypi/revision-codes/README.md
 //!
 
-use std::fmt;
-use std::io::Result;
-use std::fs::File;
-use std::io::Read;
-use std::io::ErrorKind;
-use std::io::Error;
 use globals::RASPI_INFO_PATH;
+use std::fmt;
+use std::fs::File;
+use std::io::Error;
+use std::io::ErrorKind;
+use std::io::Read;
+use std::io::Result;
 
 #[derive(Debug, PartialEq, PartialOrd)]
 pub enum RevisionStyle {
