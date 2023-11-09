@@ -10,4 +10,4 @@ exclude = ["src/bin/*", ".cargo/*", ".vscode/*"]
 documentation = "https://skasselbard.github.io/rustpiIO/"
 
 [dependencies]
-spidev = "0.3.0"
+spidev = "0.6.0"

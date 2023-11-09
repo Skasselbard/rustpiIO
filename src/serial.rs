@@ -18,9 +18,7 @@
 // along with RustpiIO.  If not, see <http://www.gnu.org/licenses/>
 
 use globals::{SPI_PATH0, SPI_PATH1};
-use spidev::{
-    Spidev, SpidevOptions, SpidevTransfer, SPI_MODE_0, SPI_MODE_1, SPI_MODE_2, SPI_MODE_3,
-};
+use spidev::{SpiModeFlags, Spidev, SpidevOptions, SpidevTransfer};
 use std::io;
 use std::io::{BufRead, Read, Write};
 use std::io::{Error, ErrorKind};
@@ -197,10 +195,10 @@ impl SerialPi {
             .bits_per_word(8)
             .max_speed_hz(speed.to_int())
             .mode(match spi_mode {
-                SpiMode::Mode0 => SPI_MODE_0,
-                SpiMode::Mode1 => SPI_MODE_1,
-                SpiMode::Mode2 => SPI_MODE_2,
-                SpiMode::Mode3 => SPI_MODE_3,
+                SpiMode::Mode0 => SpiModeFlags::SPI_MODE_0,
+                SpiMode::Mode1 => SpiModeFlags::SPI_MODE_1,
+                SpiMode::Mode2 => SpiModeFlags::SPI_MODE_2,
+                SpiMode::Mode3 => SpiModeFlags::SPI_MODE_3,
             })
             .lsb_first(false)
             .build();
