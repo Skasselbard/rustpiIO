@@ -132,17 +132,12 @@ impl GPIO {
 /// Closes the gpio and write its pin number into /sys/class/gpio/unexport
 impl Drop for GPIO {
     fn drop(&mut self) {
-        match OpenOptions::new()
+        OpenOptions::new()
             .write(true)
             .open(format!("{}unexport", GPIO_PATH))
-        {
-            Ok(mut unexport) => {
-                if let Err(why) = unexport.write_all(format!("{}", self.pin).as_bytes()) {
-                    panic!("couldn't close gpio {}: {}", self.pin, why)
-                }
-            }
-            Err(why) => panic!("file error: {}", why),
-        }
+            .expect("file error")
+            .write_all(format!("{}", self.pin).as_bytes())
+            .unwrap_or_else(|why| panic!("couldn't close gpio {}: {}", self.pin, why));
     }
 }
 
